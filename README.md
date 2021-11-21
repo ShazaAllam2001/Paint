@@ -1,2 +1,0 @@
-# Paint
-online drawing app
