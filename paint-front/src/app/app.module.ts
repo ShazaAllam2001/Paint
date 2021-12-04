@@ -6,7 +6,8 @@ import { AppComponent } from './app.component';
 import { MenuBarComponent } from './menu-bar/menu-bar.component';
 import { CanvasComponent } from './canvas/canvas.component';
 import { ToolBoxComponent } from './tool-box/tool-box.component';
-import { BottomBarComponent } from './bottom-bar/bottom-bar.component';
+import { NavBarComponent } from './nav-bar/nav-bar.component';
+import { StyleBoxComponent } from './style-box/style-box.component';
 
 @NgModule({
   declarations: [
@@ -14,7 +15,8 @@ import { BottomBarComponent } from './bottom-bar/bottom-bar.component';
     MenuBarComponent,
     CanvasComponent,
     ToolBoxComponent,
-    BottomBarComponent
+    NavBarComponent,
+    StyleBoxComponent
   ],
   imports: [
     BrowserModule,
