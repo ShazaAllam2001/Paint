@@ -6,8 +6,8 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./canvas.component.css']
 })
 export class CanvasComponent implements OnInit {
-  currWidth = 1110;
-  currHeight = 485;
+  currWidth = 1140;
+  currHeight = 490;
 
   constructor() {
   }
@@ -27,7 +27,7 @@ export class CanvasComponent implements OnInit {
       if(ctx) {
         ctx.moveTo(i,0);
         ctx.lineTo(i,this.currHeight);
-        ctx.strokeStyle = "#F0F0F0";
+        ctx.strokeStyle = "#E8E8E8";
         ctx.stroke();
       }
     }
@@ -36,7 +36,7 @@ export class CanvasComponent implements OnInit {
       if(ctx) {
         ctx.moveTo(0,i);
         ctx.lineTo(this.currWidth,i);
-        ctx.strokeStyle = "#F0F0F0";
+        ctx.strokeStyle = "#E8E8E8";
         ctx.stroke();
       }
     }
