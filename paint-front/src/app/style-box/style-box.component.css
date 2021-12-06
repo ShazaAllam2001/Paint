@@ -31,3 +31,12 @@
     width: 80px;
     height: 18px;
 }
+.custom {
+    width: 42px;
+}
+.shape-grid {
+    padding-top: 5px;
+    padding-left: 15px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}

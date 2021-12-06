@@ -1,1 +1,15 @@
 /* You can add global styles to this file, and also import other style files */
+.tool-btn {
+    width: 40px;
+    height: 40px;
+    background-color: #D0D0D0;
+    border-radius: 20%;
+    border: none;
+    cursor: pointer;
+}
+.tool-btn:hover {
+    background-color: #A9A9A9;
+}
+.tool-btn:active {
+    background-color: #A9A9A9;
+}
