@@ -1,4 +1,5 @@
 .draw-area {
-    width: 1140px;
+    width: 1150px;
     height: 490px;
+    overflow: scroll;
 }

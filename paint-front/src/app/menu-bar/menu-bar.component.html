@@ -1,4 +1,4 @@
-<div class="menu-bar">
+<div id="menu-bar">
     <div>
         <div>
             <label id="logo">Draw & Paint</label>
@@ -6,11 +6,48 @@
             <a href="" class="item">See file status</a> 
         </div>
         <div>
-            <button class="menu-btn">File</button>
-            <button class="menu-btn">Edit</button>
-            <button class="menu-btn">Insert</button>
-            <button class="menu-btn">View</button>
-            <button class="menu-btn">Help</button>
+            <div class="dropdown">
+                <button class="menu-btn">File</button>
+                <div class="dropdown-content"> 
+                   <div class="menu button">     
+                       <button type="button" value="new">New</button>
+                       <button type="button" value="open">Open</button>
+                       <button type="button" value="save">Save</button>
+                       <button type="button" value="close">Close</button>
+                   </div>
+                </div>    
+            </div>
+
+            <div class="dropdown">
+                <button class="menu-btn">Edit</button>
+                <div class="dropdown-content">
+                    <div class="menu button">     
+                        <button type="button" value="copy">Copy</button>
+                        <button type="button" value="paste">Paste</button>
+                    </div>      
+                </div>
+            </div>
+            
+            <div class="dropdown">
+                <button class="menu-btn">Insert</button>
+                <div class="dropdown-content">   
+                   <div class="menu button">     
+                       <button type="button" value="photo">photo</button>
+                       <button type="button" value="table">table</button>
+                   </div>
+                </div>
+            </div>
+                  
+            <div class="dropdown">
+               <button class="menu-btn">View</button>
+               <div class="dropdown-content"> 
+                    <div class="menu button">     
+                        <button type="button" value="zoom">zoom</button> 
+                    </div>
+               </div>
+            </div>
+                   
+            <button class="menu-btn" type="button" value="help">Help</button> 
         </div>
     </div>
     

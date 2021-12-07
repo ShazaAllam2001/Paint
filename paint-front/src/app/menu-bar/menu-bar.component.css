@@ -1,4 +1,4 @@
-.menu-bar {
+#menu-bar {
     background-color: #D0D0D0;
     padding: 12px;
     padding-bottom: 5px;
@@ -9,7 +9,7 @@
     justify-content: space-between;
 }
 #logo{
-    font-family: 'Lucida Handwriting', 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Verdana, sans-serif;
+    font-family: var(--font-title);
     font-size: 25px;
 }
 #file-name{
@@ -19,7 +19,7 @@
     margin-bottom: 3px;
 }
 a {
-    font-family: 'Times New Roman', Times, serif;
+    font-family: var(--font);
     font-size: 17px;
     color: darkblue;
 }
@@ -35,8 +35,8 @@ a:active {
 .menu-btn {
     width: 60px;
     height: 25px;
-    background-color: #D0D0D0;
-    font-family: 'Times New Roman', Times, serif;
+    background-color: var(--unhovered);
+    font-family: var(--font);
     font-weight: 500;
     font-size: 17px;
     border-radius: 4px;
@@ -44,6 +44,34 @@ a:active {
     cursor: pointer;
 }
 .menu-btn:hover {
-    background-color: #A9A9A9;
+    background-color: var(--hovered);
 }
 
+.dropdown {
+    position: relative;
+    display: inline-block; 
+}
+.dropdown-content {
+    display: none;
+    position: absolute;
+    min-width: 15px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+} 
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+.menu button {
+    display: block;
+    width: 60px;
+    height: 30px;
+    border: none;
+    border-radius: 0;
+    background-color: white;
+    outline: none;
+    position: relative;
+    cursor: pointer;
+}
+.menu button:hover{
+    background-color: rgb(235,235,235);
+}    

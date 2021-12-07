@@ -1,28 +1,31 @@
-.nav-bar {
+#nav-bar {
     display: inline-block;
     overflow-x: auto;
     overflow-y: hidden;
     white-space: nowrap;
     border-top: 2px solid;
-    width: 1140px;
+    width: 1150px;
     height: 30px;
 }
 .tab-btn {
     width: 70px;
     height: 28px;
     margin-left: 5px;
-    background-color: #D0D0D0;
-    font-family: 'Times New Roman', Times, serif;
+    background-color: var(--unhovered);
+    font-family: var(--font);
     font-size: 18px;
     border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px;
     border: none;
-    overflow: hidden;
+    text-overflow: ellipsis;
     cursor: pointer;
 }
 .tab-btn:hover {
-    background-color: #A9A9A9;
+    background-color: var(--hovered);
 }
 .tab-btn:active {
-    background-color: #A9A9A9;
+    background-color: var(--hovered);
+}
+.plus-btn {
+    width: 30px;
 }
