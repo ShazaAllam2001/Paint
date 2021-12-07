@@ -1,9 +1,7 @@
 #tool-box {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    align-items: center;
-    background-color: #D0D0D0;
+    background-color: var(--unhovered);
     width: 40px;
     height: 520px;
     border-bottom-left-radius: 10px;
@@ -12,20 +10,17 @@
 .expand {
     position: relative;
     display: flex;
-    background-color: #D0D0D0;
+    background-color: var(--unhovered);
 }
 .expand-content {
     display: none;
     position: absolute;
-    padding-left: 45px;
+    padding-left: 40px;
     height: 40px;
 }
-.dropdown-content .tool-btn:hover {
-    background-color: #A9A9A9;
+.expand-content .tool-btn:hover {
+    background-color: var(--hovered);
 }
 .expand:hover .expand-content {
     display: flex;
-}
-.expand:hover .tool-btn {
-    background-color: #A9A9A9;
 }

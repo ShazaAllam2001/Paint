@@ -1,6 +1,6 @@
-.style-box {
-    background-color: #D0D0D0;
-    width: 170px;
+#style-box {
+    background-color: var(--unhovered);
+    width: 160px;
     height: 520px;
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
@@ -10,21 +10,19 @@
     justify-content: center;
     padding-top: 12px;
 }
-.btn {
+.zoom-btn .tool-btn{
     width: 20px;
     height: 20px;
-    background-color: #D0D0D0;
-    border-radius: 20%;
     border: 1px solid black;
-    cursor: pointer;
 }
-.btn:hover {
-    background-color: #A9A9A9;
+.right-element {
+    margin-left: 10px;
 }
-.btn:active {
-    background-color: #A9A9A9;
+.zoom-ratio {
+    margin-left: 5px;
+    font-size: 15px;
 }
-.label {
+.symbol {
     padding-right: 6px;
 }
 .number {
@@ -36,7 +34,7 @@
 }
 .shape-grid {
     padding-top: 5px;
-    padding-left: 15px;
+    padding-left: 10px;
     display: grid;
     grid-template-columns: repeat(3, 1fr);
 }
