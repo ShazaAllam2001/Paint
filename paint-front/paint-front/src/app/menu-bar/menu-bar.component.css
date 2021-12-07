@@ -1,0 +1,106 @@
+.menu-bar {
+    background-color: #D0D0D0;
+    padding: 12px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+#logo{
+    font-family: 'Lucida Handwriting', 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Verdana, sans-serif;
+    font-size: 25px;
+}
+#file-name{
+    width: 350px;
+    height: 25px;
+    font-size: 15px;
+    margin-bottom: 3px;
+}
+a {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 17px;
+    color: darkblue;
+}
+a:hover {
+    color: blue;
+}
+a:active {
+    color: blue;
+}
+.item {
+    margin-left: 15px;
+}
+.menu-btn {
+    width: 60px;
+    height: 25px;
+    background-color: #D0D0D0;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: 500;
+    font-size: 17px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+}
+.menu-btn:hover {
+    background-color: #A9A9A9;
+}
+.btn {
+    width: 40px;
+    height: 40px;
+    background-color: #D0D0D0;
+    border-radius: 20%;
+    border: none;
+    cursor: pointer;
+}
+.btn:hover {
+    background-color: #A9A9A9;
+}
+.btn:active {
+    background-color: #A9A9A9;
+}
+
+    
+
+  
+.dropdown {
+    position: relative;
+    display: inline-block; }
+  
+.dropdown-content {
+    display: none;
+    position: absolute;
+    min-width: 15px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;}
+ 
+  
+.dropdown:hover .dropdown-content {
+    display: block;
+    background-color: rgb(248, 247, 247);
+    padding: 4px 10px;
+}
+  
+
+.menu  {padding-top: 5px}
+      
+.menu button {
+        display: block;
+        width: 60px;
+        height: 30px;
+        border: 0;
+        border-radius: 0;
+        background-color: #e3e2ee;
+        margin-bottom: 5px;
+        padding:  5px;
+        outline: none;
+        position: relative;
+        cursor: pointer;
+      }
+  .menu button:hover{cursor: pointer;
+      background-color: rgb(196, 196, 196);
+  }    
+
+      
+      
