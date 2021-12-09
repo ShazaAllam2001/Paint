@@ -2,9 +2,17 @@
   <app-menu-bar></app-menu-bar>
 
   <div class="content">
-    <app-tool-box></app-tool-box>
+    <app-tool-box (lineDraw)="onChangeLine($event)"
+                  (triDraw)="onChangeTri($event)"
+                  (rhomboidDraw)="onChangeRhomboid($event)"
+                  (rectDraw)="onChangeRect($event)"
+    ></app-tool-box>
     <div>
-      <app-canvas></app-canvas>
+      <app-canvas [lineEvent]="lineEvent"
+                  [triEvent]="triEvent"
+                  [rhomboidEvent]="rhomboidEvent"
+                  [rectEvent]="rectEvent"
+      ></app-canvas>
       <app-nav-bar></app-nav-bar>
     </div>
     <app-style-box></app-style-box>
