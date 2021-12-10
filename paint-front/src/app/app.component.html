@@ -6,12 +6,26 @@
                   (triDraw)="onChangeTri($event)"
                   (rhomboidDraw)="onChangeRhomboid($event)"
                   (rectDraw)="onChangeRect($event)"
+                  (rhombusDraw)="onChangeRhombus($event)"
+                  (trapezoidDraw)="onChangeTrapezoid($event)"
+                  (pentDraw)="onChangePent($event)"
+                  (hexDraw)="onChangeHex($event)"
+                  (heptDraw)="onChangeHept($event)"
+                  (circDraw)="onChangeCirc($event)"
+                  (elliDraw)="onChangeElli($event)"
     ></app-tool-box>
     <div>
       <app-canvas [lineEvent]="lineEvent"
                   [triEvent]="triEvent"
                   [rhomboidEvent]="rhomboidEvent"
                   [rectEvent]="rectEvent"
+                  [rhombusEvent]="rhombusEvent"
+                  [trapezoidEvent]="trapezoidEvent"
+                  [pentEvent]="pentEvent"
+                  [hexEvent]="hexEvent"
+                  [heptEvent]="heptEvent"
+                  [circEvent]="circEvent"
+                  [elliEvent]="elliEvent"
       ></app-canvas>
       <app-nav-bar></app-nav-bar>
     </div>

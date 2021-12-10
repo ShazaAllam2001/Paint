@@ -11,6 +11,13 @@ export class AppComponent {
   triEvent!: Event;
   rhomboidEvent!: Event;
   rectEvent!: Event;
+  rhombusEvent!: Event;
+  trapezoidEvent!: Event;
+  pentEvent!: Event;
+  hexEvent!: Event;
+  heptEvent!: Event;
+  circEvent!: Event;
+  elliEvent!: Event;
 
   onChangeLine(event: Event) {
     this.lineEvent = event;
@@ -24,5 +31,26 @@ export class AppComponent {
   onChangeRect(event: Event) {
     this.rectEvent = event;
   }
-  
+  onChangeRhombus(event: Event) {
+    this.rhombusEvent = event;
+  }
+  onChangeTrapezoid(event: Event) {
+    this.trapezoidEvent = event;
+  }
+  onChangePent(event: Event) {
+    this.pentEvent = event;
+  }
+  onChangeHex(event: Event) {
+    this.hexEvent = event;
+  }
+  onChangeHept(event: Event) {
+    this.heptEvent = event;
+  }
+  onChangeCirc(event: Event) {
+    this.circEvent = event;
+  }
+  onChangeElli(event: Event) {
+    this.elliEvent = event;
+  }
+
 }
