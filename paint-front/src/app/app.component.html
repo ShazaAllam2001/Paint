@@ -1,0 +1,35 @@
+<div id="app">
+  <app-menu-bar></app-menu-bar>
+
+  <div class="content">
+    <app-tool-box (lineDraw)="onChangeLine($event)"
+                  (triDraw)="onChangeTri($event)"
+                  (rhomboidDraw)="onChangeRhomboid($event)"
+                  (rectDraw)="onChangeRect($event)"
+                  (RhombusDraw)="onChangeRhombus($event)"
+                  (TrapeDraw)="onChangeTrape($event)"
+                  (PentDraw)="onChangePent($event)"
+                  (HexDraw)="onChangeHex($event)"
+                  (HeptDraw)="onChangeHept($event)"
+                  (CircDraw)="onChangeCirc($event)"
+                  (ElliDraw)="onChangeElli($event)"
+                 ></app-tool-box>
+    <div>
+      <app-canvas [lineEvent]="lineEvent"
+                  [triEvent]="triEvent"
+                  [rhomboidEvent]="rhomboidEvent"
+                  [rectEvent]="rectEvent"
+                  [RhombusEvent]="rhombusEvent"
+                  [TrapeEvent]="trapeEvent"
+                  [PentEvent]="pentEvent"
+                  [HexEvent]="hexEvent"
+                  [HeptEvent]="heptEvent"
+                  [CircEvent]="circEvent"
+                  [ElliEvent]="elliEvent"
+      ></app-canvas>
+      <app-nav-bar></app-nav-bar>
+    </div>
+    <app-style-box></app-style-box>
+  </div>
+
+</div>

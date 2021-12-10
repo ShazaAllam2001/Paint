@@ -1,0 +1,21 @@
+/* You can add global styles to this file, and also import other style files */
+:root {
+    --unhovered: #D0D0D0;
+    --hovered: #A9A9A9;
+    --font: 'Times New Roman', Times, serif;
+    --font-title: 'Lucida Handwriting', 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Verdana, sans-serif;
+}
+.tool-btn {
+    width: 40px;
+    height: 40px;
+    background-color: var(--unhovered);
+    border-radius: 20%;
+    border: none;
+    cursor: pointer;
+}
+.tool-btn:hover {
+    background-color: var(--hovered);
+}
+.tool-btn:active {
+    background-color: var(--hovered);
+}

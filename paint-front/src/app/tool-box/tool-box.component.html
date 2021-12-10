@@ -1,0 +1,93 @@
+<div id="tool-box">
+    <button class="tool-btn" title="Cursor Tool">
+        <img src="../assets/tools/icons8-cursor-60.png" width="30" height="30"/>
+    </button>
+
+    <button class="tool-btn" title="Panning Tool">
+        <img src="../assets/tools/icons8-hand-48.png" width="24" height="24"/>
+    </button>
+
+    <button class="tool-btn" title="Erase Tool">
+        <img src="../assets/tools/icons8-erase-48.png" width="24" height="24"/>
+    </button>
+
+    <button class="tool-btn" title="Pencil Tool">
+        <img src="../assets/tools/icons8-pencil-48.png" width="24" height="24"/>
+    </button>
+
+    <button class="tool-btn" title="Text Tool">
+        <img src="../assets/tools/icons8-text-48.png" width="24" height="24"/>
+    </button>
+
+    <button class="tool-btn" title="Line Tool" (click)="drawLine($event)">
+        <img src="../assets/shapes/icons8-line-48.png" width="24" height="24"/>
+    </button>
+
+    <button class="tool-btn" title="Polyline Tool" (click)="drawPoly($event)">
+        <img src="../assets/shapes/flaticon-polyline-48.png" width="24" height="24"/>
+    </button>
+
+    <button class="tool-btn" title="Triangle Tool" (click)="drawTriangle($event)"> 
+        <img src="../assets/shapes/icons8-triangle-48.png" width="24" height="24"/>
+    </button>
+    
+    <div class="expand">
+        <button class="tool-btn" title="Rhomboid Tool" >
+            <img src="../assets/shapes/icons8-rhomboid-48.png" width="24" height="24"/>
+        </button>
+        <div class="expand-content">
+            <button class="sub-tool-btn" title="Rhomboid Tool" (click)="drawRhomboid($event)">
+                <img src="../assets/shapes/icons8-rhomboid-48.png" width="24" height="24"/>
+            </button>
+            <button class="sub-tool-btn" title="Rect Tool" (click)="drawRect($event)">
+                <img src="../assets/shapes/icons8-rectangular-48.png" width="24" height="24"/>
+            </button>
+            <button class="sub-tool-btn" title="RhombusTool" (click)="drawRhombus($event)">
+                <img src="../assets/shapes/icons8-rhombus-48.png" width="24" height="24"/>
+            </button>
+            <button class="sub-tool-btn" title="TrapezoidTool" (click)="drawTrape($event)">
+                <img src="../assets/shapes/trapezoid-48.png" width="24" height="24"/>
+            </button>
+        </div>
+    </div>
+
+    <div class="expand">
+        <button class="tool-btn" title="polygonal Tool" >
+            <img src="../assets/shapes/icons8-pentagon-48.png" width="24" height="24"/>
+        </button>
+        <div class="expand-content">
+            <button class="sub-tool-btn" title="Pentagon Tool" (click)="drawPent($event)">
+                <img src="../assets/shapes/icons8-pentagon-48.png" width="24" height="24"/>
+            </button> 
+            <button class="sub-tool-btn" title="Hexagon Tool"(click)="drawHex($event)">
+                <img src="../assets/shapes/icons8-hexagon-48.png" width="24" height="24"/>
+            </button> 
+            <button class="sub-tool-btn" title="Heptagon Tool" (click)="drawHept($event)">
+                <img src="../assets/shapes/icons8-heptagon-48.png" width="24" height="24"/>
+            </button>   
+        </div>
+    </div>
+
+    <div class="expand">
+        <button class="tool-btn" title="Ellipse Tool">
+            <img src="../assets/shapes/icons8-ellipse-48.png" width="24" height="24"/>
+        </button>
+        <div class="expand-content">
+            <button class="sub-tool-btn" title="Ellipse Tool" (click)="drawElli($event)">
+                <img src="../assets/shapes/icons8-ellipse-48.png" width="24" height="24"/>
+            </button>  
+            <button class="sub-tool-btn" title="Circle Tool" (click)="drawCirc($event)">
+                <img src="../assets/shapes/icons8-circle-48.png" width="24" height="24"/>
+            </button>   
+        </div>
+    </div>
+    
+    <button class="tool-btn" title="Path Tool">
+        <img src="../assets/shapes/flaticon-path-24.png" width="24" height="24"/>
+    </button>
+
+    <button class="tool-btn" title="Add custom shape">
+        <img src="../assets/tools/icons8-plus-+-96.png" width="24" height="24"/>
+    </button>
+
+</div>

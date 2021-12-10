@@ -1,0 +1,77 @@
+#menu-bar {
+    background-color: #D0D0D0;
+    padding: 12px;
+    padding-bottom: 5px;
+    border-bottom: 2px solid;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+#logo{
+    font-family: var(--font-title);
+    font-size: 25px;
+}
+#file-name{
+    width: 350px;
+    height: 25px;
+    font-size: 15px;
+    margin-bottom: 3px;
+}
+a {
+    font-family: var(--font);
+    font-size: 17px;
+    color: darkblue;
+}
+a:hover {
+    color: blue;
+}
+a:active {
+    color: blue;
+}
+.item {
+    margin-left: 15px;
+}
+.menu-btn {
+    width: 60px;
+    height: 25px;
+    background-color: var(--unhovered);
+    font-family: var(--font);
+    font-weight: 500;
+    font-size: 17px;
+    border-radius: 4px;
+    border: none;
+    cursor: pointer;
+}
+.menu-btn:hover {
+    background-color: var(--hovered);
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block; 
+}
+.dropdown-content {
+    display: none;
+    position: absolute;
+    min-width: 15px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+} 
+.dropdown:hover .dropdown-content {
+    display: block;
+}
+.menu button {
+    display: block;
+    width: 60px;
+    height: 30px;
+    border: none;
+    border-radius: 0;
+    background-color: white;
+    outline: none;
+    position: relative;
+    cursor: pointer;
+}
+.menu button:hover{
+    background-color: rgb(235,235,235);
+}    

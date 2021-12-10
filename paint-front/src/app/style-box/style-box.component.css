@@ -1,0 +1,40 @@
+#style-box {
+    background-color: var(--unhovered);
+    width: 160px;
+    height: 520px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+.element {
+    display: flex;
+    justify-content: center;
+    padding-top: 12px;
+}
+.zoom-btn .tool-btn{
+    width: 20px;
+    height: 20px;
+    border: 1px solid black;
+}
+.right-element {
+    margin-left: 10px;
+}
+.zoom-ratio {
+    margin-left: 5px;
+    font-size: 15px;
+}
+.symbol {
+    padding-right: 6px;
+}
+.number {
+    width: 80px;
+    height: 18px;
+}
+.custom {
+    width: 42px;
+}
+.shape-grid {
+    padding-top: 5px;
+    padding-left: 10px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+}
