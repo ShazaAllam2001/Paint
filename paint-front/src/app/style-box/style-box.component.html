@@ -28,7 +28,7 @@
         <label for="stroke-color" class="symbol">
             <img src="../assets/tools/icons8-marker-pen-48.png" width="24" height="24"/>
         </label>
-        <input type="color" id="stroke-color" title="Stroke color">
+        <input type="color" id="stroke-color" title="Stroke color" (click)="SetColor($event)" value="">
     </div>
     <div class="element">
         <label for="fill-color" class="symbol">

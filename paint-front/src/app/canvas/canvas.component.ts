@@ -1,4 +1,4 @@
-import { analyzeAndValidateNgModules } from '@angular/compiler';
+import { analyzeAndValidateNgModules, collectExternalReferences } from '@angular/compiler';
 import { Component, Input, OnInit, Output} from '@angular/core';
 
 @Component({
@@ -15,6 +15,7 @@ export class CanvasComponent implements OnInit {
   ctx: any = null;
   isDrawing : boolean = false;
   s: string ='';
+ colo: string ='';
   data:any =null;
  
   @Input()
@@ -89,8 +90,21 @@ export class CanvasComponent implements OnInit {
       if(ElliEvent) 
         this.s ='Elli';
         this.draw(this.s);
-  }    
+  }   
   
+  @Input()
+  set ColorEvent( ColorEvent: Event) {
+    if(ColorEvent) 
+      this.s ='Color';
+      this.draw(this.s);
+}    
+  
+@Input()
+  set PencilEvent(PencilEvent: Event) {
+    if(PencilEvent) 
+      this.s ='Pencil';
+      this.draw(this.s);
+}    
   constructor() { }
 
   ngOnInit(): void {
@@ -148,7 +162,7 @@ export class CanvasComponent implements OnInit {
 
 
 draw(s:string){
-
+ let colo: string ='';
  let isDrawing= false;
  let data =''; let x=0; let y=0;
  var cnv: HTMLCanvasElement | null;
@@ -164,24 +178,41 @@ draw(s:string){
       x = e.offsetX;
       y = e.offsetY;
       isDrawing = true;
+     // Line( x, y, e.offsetX, e.offsetY);
     });
     
    cnv.addEventListener('mousemove', e => {
-      if (isDrawing === true) {
-        check(s, x, y, e.offsetX, e.offsetY);
+    cnv = document.getElementsByTagName("canvas")[0];
+    ctx = cnv.getContext("2d");
+    
+      if (isDrawing === true) { 
+        //if(this.s==='Pencil'){s='';}
+        if(s===''||this.s==='Pencil' ){
+          Line(x, y, e.offsetX, e.offsetY);
+          x = e.offsetX;
+          y = e.offsetY;}
+        else{check(s, x, y, e.offsetX, e.offsetY);}
+        
       }
     });
     
    window.addEventListener('mouseup', e => {
+    cnv = document.getElementsByTagName("canvas")[0];
+    ctx = cnv.getContext("2d");
+   
       if (isDrawing === true) {
-        check(s, x, y, e.offsetX, e.offsetY);
+       // if(){s='';}
+        if(s===''||this.s==='Pencil'){Line(x, y, e.offsetX, e.offsetY);}
+        else{check(s, x, y, e.offsetX, e.offsetY);}
         x = 0;
         y = 0;
-        isDrawing = false;
-      }
+        isDrawing = false;}
+      
     });
     
+ 
 function check (s:string,x1: any,y1: any,x2: any, y2:any){
+  
   if (isDrawing) {
     ctx.putImageData(data, 0, 0);}
 
@@ -207,15 +238,15 @@ function check (s:string,x1: any,y1: any,x2: any, y2:any){
     case 'Circ':Circle(x1,y1,x2,y2);
       break ;   
     case 'Elli':Ellipse(x1,y1,x2,y2);
-      break ;      
+      break ;
+    /* case 'Color': colo=s ;
+      break;*/
+       
   }
 }
-   
+  
 function Line( x1: any,y1: any,x2: any, y2:any){
-    
-  if (isDrawing) {
-    ctx.putImageData(data, 0, 0);}
-
+     
    ctx.moveTo(x1, y1);
    ctx.lineTo(x2, y2);
    ctx.closePath();
@@ -280,17 +311,6 @@ function Rectangle(x1: any,y1: any,x2: any, y2:any) {
       ctx.stroke();
       ctx.strokeStyle = 'black';
       ctx.beginPath();
-    }
+    }    
 
-   /* function drawFLine(context: { beginPath: () => void; strokeStyle: any; lineWidth: number; moveTo: (arg0: any, arg1: any) => void; lineTo: (arg0: any, arg1: any) => void; stroke: () => void; closePath: () => void; }, x1: number, y1: number, x2: number, y2: number) {
-      context.beginPath();
-      context.strokeStyle =  'red';
-      context.lineWidth = 1;
-      context.moveTo(x1, y1);
-      context.lineTo(x2, y2);
-      context.stroke();
-      context.closePath();
-    }
-    
-*/
 } }

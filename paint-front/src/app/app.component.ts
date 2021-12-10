@@ -18,7 +18,8 @@ export class AppComponent {
   heptEvent!:Event;
   circEvent!:Event;
   elliEvent!:Event;
- 
+  colorEvent!:Event;
+  pencilEvent!:Event;
 
   onChangeLine(event: Event) {
     this.lineEvent = event;
@@ -53,6 +54,12 @@ export class AppComponent {
   }
   onChangeElli(event: Event) {
     this.elliEvent = event;
+  }
+  onChangeColor(event: Event) {
+    this.colorEvent = event;
+  }
+  onChangePencil(event: Event) {
+    this.pencilEvent = event;
   }
   
 }

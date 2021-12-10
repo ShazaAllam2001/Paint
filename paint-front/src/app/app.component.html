@@ -13,6 +13,8 @@
                   (HeptDraw)="onChangeHept($event)"
                   (CircDraw)="onChangeCirc($event)"
                   (ElliDraw)="onChangeElli($event)"
+                  (Color)="onChangeColor($event)"
+                  (PenDraw)="onChangePencil($event)"
                  ></app-tool-box>
     <div>
       <app-canvas [lineEvent]="lineEvent"
@@ -26,6 +28,8 @@
                   [HeptEvent]="heptEvent"
                   [CircEvent]="circEvent"
                   [ElliEvent]="elliEvent"
+                  [ColorEvent]="colorEvent"
+                  [PencilEvent]="pencilEvent"
       ></app-canvas>
       <app-nav-bar></app-nav-bar>
     </div>
