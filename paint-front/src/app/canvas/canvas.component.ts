@@ -17,6 +17,11 @@ export class CanvasComponent implements OnInit {
 
   /* Styling */
   @Input()
+  set fontChange(fontChange: string) {
+    if(fontChange) 
+      this.changeFont(fontChange);
+  }
+  @Input()
   set widthChange(widthChange: string) {
     if(widthChange) 
       this.changeWidth(widthChange);
@@ -226,11 +231,16 @@ export class CanvasComponent implements OnInit {
     } 
     return 0;
   }
+  changeFont(font: string) {
+    var ctx = this.draw_cnv?.getContext("2d");
+    if(ctx) 
+      ctx.font = font;
+    console.log(font);
+  }
   changeWidth(width: string) {
     var ctx = this.draw_cnv?.getContext("2d");
     if(ctx) 
       ctx.lineWidth = parseFloat(width);
-    console.log(width);
   }
   changeDash(dash: string) {
     var ctx = this.draw_cnv?.getContext("2d");

@@ -26,6 +26,7 @@ export class AppComponent {
   starEvent!: Event;
   heartEvent!: Event;
 
+  fontChange!: string;
   widthChange!: string;
   dashChange!: string;
   colorChange!: string;
@@ -81,6 +82,9 @@ export class AppComponent {
     this.heartEvent = event;
   }
 
+  onChangeFont(font: any) {
+    this.fontChange = font;
+  }
   onChangeWidth(width: any) {
     this.widthChange = width;
   }

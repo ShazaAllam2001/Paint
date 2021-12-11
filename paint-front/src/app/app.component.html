@@ -36,6 +36,7 @@
                   [elliEvent]="elliEvent"
                   [starEvent]="starEvent"
                   [heartEvent]="heartEvent"
+                  [fontChange]="fontChange"
                   [widthChange]="widthChange"
                   [dashChange]="dashChange"
                   [colorChange]="colorChange"
@@ -43,7 +44,8 @@
       ></app-canvas>
       <app-nav-bar></app-nav-bar>
     </div>
-    <app-style-box (widthChange)="onChangeWidth($event)"
+    <app-style-box (fontChange)="onChangeFont($event)"
+                   (widthChange)="onChangeWidth($event)"
                    (dashChange)="onChangeDash($event)"
                    (colorChange)="onChangeColor($event)"
                    (colorFillChange)="onChangeColorFill($event)"
