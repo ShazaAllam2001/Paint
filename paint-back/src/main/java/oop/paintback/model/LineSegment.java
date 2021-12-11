@@ -1,4 +1,4 @@
-package oop.paintback.model.openShapes;
+package oop.paintback.model;
 
 import oop.paintback.model.Shape;
 import java.awt.*;

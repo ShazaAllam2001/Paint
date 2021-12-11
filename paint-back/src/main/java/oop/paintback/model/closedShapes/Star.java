@@ -1,4 +1,4 @@
-package oop.paintback.model.closedShapes.custom;
+package oop.paintback.model.closedShapes;
 
 import oop.paintback.model.closedShapes.closedShape;
 import java.awt.*;
