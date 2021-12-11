@@ -4,6 +4,7 @@ import java.awt.*;
 import java.io.IOException;
 
 public class Pentagon extends Polygon {
+    private static Pentagon instance;
 
     public Pentagon() { }
     public Pentagon(Point[] points, Point center, String outLineColor, String fillColor) throws IOException {

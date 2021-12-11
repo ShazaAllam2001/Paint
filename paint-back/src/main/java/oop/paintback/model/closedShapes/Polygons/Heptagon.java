@@ -4,6 +4,7 @@ import java.awt.*;
 import java.io.IOException;
 
 public class Heptagon extends Polygon {
+    private static Heptagon instance;
 
     public Heptagon() { }
     public Heptagon(Point[] points, Point center, String outLineColor, String fillColor) throws IOException {
