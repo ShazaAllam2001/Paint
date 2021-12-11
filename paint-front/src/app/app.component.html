@@ -2,7 +2,8 @@
   <app-menu-bar></app-menu-bar>
 
   <div class="content">
-    <app-tool-box (lineDraw)="onChangeLine($event)"
+    <app-tool-box (pencilDraw)="onChangePencil($event)"
+                  (lineDraw)="onChangeLine($event)"
                   (triDraw)="onChangeTri($event)"
                   (rhomboidDraw)="onChangeRhomboid($event)"
                   (rectDraw)="onChangeRect($event)"
@@ -13,9 +14,12 @@
                   (heptDraw)="onChangeHept($event)"
                   (circDraw)="onChangeCirc($event)"
                   (elliDraw)="onChangeElli($event)"
+                  (starDraw)="onChangeStar($event)"
+                  (heartDraw)="onChangeHeart($event)"
     ></app-tool-box>
     <div>
-      <app-canvas [lineEvent]="lineEvent"
+      <app-canvas [pencilEvent]="pencilEvent"
+                  [lineEvent]="lineEvent"
                   [triEvent]="triEvent"
                   [rhomboidEvent]="rhomboidEvent"
                   [rectEvent]="rectEvent"
@@ -26,10 +30,20 @@
                   [heptEvent]="heptEvent"
                   [circEvent]="circEvent"
                   [elliEvent]="elliEvent"
+                  [starEvent]="starEvent"
+                  [heartEvent]="heartEvent"
+                  [widthChange]="widthChange"
+                  [dashChange]="dashChange"
+                  [colorChange]="colorChange"
+                  [colorFillChange]="colorFillChange"
       ></app-canvas>
       <app-nav-bar></app-nav-bar>
     </div>
-    <app-style-box></app-style-box>
+    <app-style-box (widthChange)="onChangeWidth($event)"
+                   (dashChange)="onChangeDash($event)"
+                   (colorChange)="onChangeColor($event)"
+                   (colorFillChange)="onChangeColorFill($event)"
+    ></app-style-box>
   </div>
 
 </div>

@@ -6,6 +6,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
   styleUrls: ['./tool-box.component.css']
 })
 export class ToolBoxComponent implements OnInit {
+  @Output() pencilDraw = new EventEmitter<Event>();
 
   @Output() lineDraw = new EventEmitter<Event>();
   @Output() triDraw = new EventEmitter<Event>();
@@ -18,10 +19,16 @@ export class ToolBoxComponent implements OnInit {
   @Output() heptDraw = new EventEmitter<Event>();
   @Output() circDraw = new EventEmitter<Event>();
   @Output() elliDraw = new EventEmitter<Event>();
+  @Output() starDraw = new EventEmitter<Event>();
+  @Output() heartDraw = new EventEmitter<Event>();
 
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  pencil(event: Event) {
+    this.pencilDraw.emit(event);
   }
 
   drawLine(event: Event) {
@@ -56,6 +63,12 @@ export class ToolBoxComponent implements OnInit {
   }
   drawElli(event: Event) {
     this.elliDraw.emit(event);
+  }
+  drawStar(event: Event) {
+    this.starDraw.emit(event);
+  }
+  drawHeart(event: Event) {
+    this.heartDraw.emit(event);
   }
 
 }

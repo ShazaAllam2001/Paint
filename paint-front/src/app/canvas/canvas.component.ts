@@ -12,78 +12,128 @@ export class CanvasComponent implements OnInit {
   isDrawing: boolean = false;
   s: string = '';
   data: any = null;
+  dash: number[] = [0, 5, 10, 15];
 
+  /* Styling */
+  @Input()
+  set widthChange(widthChange: string) {
+    if(widthChange) 
+      this.changeWidth(widthChange);
+  }
+  @Input()
+  set dashChange(dashChange: string) {
+    if(dashChange) 
+      this.changeDash(dashChange);
+  }
+  @Input()
+  set colorChange(colorChange: string) {
+    if(colorChange) 
+      this.changeColor(colorChange);
+  }
+  @Input()
+  set colorFillChange(colorFillChange: string) {
+    if(colorFillChange) 
+      this.changeColorFill(colorFillChange);
+  }
+  /* Tools */
+  @Input()
+  set pencilEvent(pencilEvent: Event) {
+    if(pencilEvent) {
+      this.s = "Pencil";
+      this.draw(this.s);
+    }
+  }
+  /* Shapes Input */
   @Input()
   set lineEvent(lineEvent: Event) {
-    if(lineEvent) 
+    if(lineEvent) {
       this.s = 'Line';
-      this.draw(this.s);     
-  }
-  /*@Input()
-  set polyEvent(PolyEvent: Event) {
-    if(PolyEvent) 
-      this.s = 'Poly';
       this.draw(this.s);
-  }*/
+    }     
+  }
   @Input()
   set triEvent(triEvent: Event) {
-    if(triEvent) 
+    if(triEvent) {
       this.s = 'Tri';
       this.draw(this.s);
+    }
   }
   @Input()
   set rhomboidEvent(rhomboidEvent: Event) {
-    if(rhomboidEvent)
+    if(rhomboidEvent) {
       this.s = 'Rhomboid';
       this.draw(this.s);
+    }
   }
   @Input()
   set rectEvent(rectEvent: Event) {
-    if(rectEvent) 
+    if(rectEvent) {
       this.s = 'Rect';
       this.draw(this.s);
+    }
   }
   @Input()
     set rhombusEvent(rhombusEvent: Event) {
-      if(rhombusEvent) 
+      if(rhombusEvent) {
         this.s = 'Rhombus';
         this.draw(this.s);
+      }
   }
   @Input()
     set trapezoidEvent(trapezoidEvent: Event) {
-      if(trapezoidEvent) 
+      if(trapezoidEvent) {
         this.s = 'Trape';
         this.draw(this.s);
+      }
   } 
   @Input()
     set pentEvent(pentEvent: Event) {
-      if(pentEvent) 
+      if(pentEvent) {
         this.s = 'Pent';
         this.draw(this.s);
+      }
   }  
   @Input()
     set hexEvent(hexEvent: Event) {
-      if(hexEvent) 
+      if(hexEvent) {
         this.s = 'Hex';
         this.draw(this.s);
+      }
   }  
   @Input()
     set heptEvent(heptEvent: Event) {
-      if(heptEvent) 
+      if(heptEvent) {
         this.s = 'Hept';
         this.draw(this.s);
+      }
   } 
   @Input()
     set circEvent(circEvent: Event) {
-      if(circEvent) 
+      if(circEvent) {
         this.s = 'Circ';
         this.draw(this.s);
+      }
   }  
   @Input()
     set elliEvent(elliEvent: Event) {
-      if(elliEvent) 
+      if(elliEvent) {
         this.s = 'Elli';
         this.draw(this.s);
+      }
+  }  
+  @Input()
+    set starEvent(starEvent: Event) {
+      if(starEvent) {
+        this.s = 'Star';
+        this.draw(this.s);
+      } 
+  }  
+  @Input()
+    set heartEvent(heartEvent: Event) {
+      if(heartEvent) {
+        this.s = 'Heart';
+        this.draw(this.s);
+      }
   }    
 
   constructor() { }
@@ -95,10 +145,8 @@ export class CanvasComponent implements OnInit {
     this.ctx = this.draw_cnv.getContext("2d");
     if(this.ctx)
       this.ctx.strokeStyle = "black";
+      this.ctx.lineWidth = 1.5;
     this.drawGrid();
-    //document.addEventListener("mousedown", function(event) => {
-
-    //});
   }
 
   drawGrid() {
@@ -150,6 +198,38 @@ export class CanvasComponent implements OnInit {
       ctx?.closePath();
     }
   }
+  
+  changeWidth(width: string) {
+    var ctx = this.draw_cnv?.getContext("2d");
+    if(ctx) 
+      ctx.lineWidth = parseFloat(width);
+    console.log(width);
+  }
+  changeDash(dash: string) {
+    var ctx = this.draw_cnv?.getContext("2d");
+    if(ctx) 
+    switch(dash){
+      case 'solid': ctx.setLineDash(this.dash.slice(0,1));
+        break; 
+      case 'dashed-1': ctx.setLineDash(this.dash.slice(1,2));
+        break;
+      case 'dashed-2': ctx.setLineDash(this.dash.slice(2,3));
+        break; 
+      case 'dashed-3': ctx.setLineDash(this.dash.slice(3,4));
+        break; 
+    }
+  }
+  changeColor(color: string) {
+    var ctx = this.draw_cnv?.getContext("2d");
+    if(ctx) 
+      ctx.strokeStyle = color;
+  }
+  changeColorFill(color: string) {
+    var ctx = this.draw_cnv?.getContext("2d");
+    if(ctx) 
+      ctx.fillStyle = color;
+    console.log(color);
+  }
 
   draw(s:string){
     let isDrawing = false;
@@ -170,14 +250,28 @@ export class CanvasComponent implements OnInit {
     });   
    
     cnv.addEventListener('mousemove', e => {
+      cnv = document.getElementsByTagName("canvas")[0];
+      ctx = cnv.getContext("2d");
       if (isDrawing === true) {
-        check(s, x, y, e.offsetX, e.offsetY);
+        if(s===''||this.s==='Pencil') {
+          drawLine(x, y, e.offsetX, e.offsetY);
+          x = e.offsetX;
+          y = e.offsetY;
+        } else {
+          check(s, x, y, e.offsetX, e.offsetY);
+        }
       }
     });
    
     window.addEventListener('mouseup', e => {
+      cnv = document.getElementsByTagName("canvas")[0];
+      ctx = cnv.getContext("2d");
       if (isDrawing === true) {
-        check(s, x, y, e.offsetX, e.offsetY);
+        if(s===''||this.s==='Pencil'){
+          drawLine(x, y, e.offsetX, e.offsetY);
+        } else{
+          check(s, x, y, e.offsetX, e.offsetY);
+        }
         x = 0;
         y = 0;
         isDrawing = false;
@@ -190,31 +284,41 @@ export class CanvasComponent implements OnInit {
     
       switch(s){
         case 'Line': Line(x1,y1,x2,y2);
-          break;
-        case 'Poly': ;
-          break ;  
+          break; 
         case 'Tri': Triangle(x1,y1,x2,y2);
-          break ;
-        case 'Rhomboid': ;
-          break ; 
+          break;
+        case 'Rhomboid': Rhomboid(x1,y1,x2,y2);
+          break; 
         case 'Rect': Rectangle(x1,y1,x2,y2);
-          break ;
+          break;
         case 'Rhombus': polygonal(x1,y1,x2,y2,4);
-          break ;
+          break;
         case 'Pent': polygonal(x1,y1,x2,y2,5);
-          break ;
+          break;
         case 'Hex': polygonal(x1,y1,x2,y2,6);
-          break ; 
+          break; 
         case 'Hept': polygonal(x1,y1,x2,y2,7);
-          break ;  
+          break;  
         case 'Circ': Circle(x1,y1,x2,y2);
-          break ;   
+          break;   
         case 'Elli': Ellipse(x1,y1,x2,y2);
-          break ;      
+          break;  
+        case 'Star': Star(x1,y1,x2,y2);
+          break;  
+        case 'Heart': Heart(x1,y1,x2,y2);
+          break;    
       }
     }
-   
-    function Line( x1: any,y1: any,x2: any, y2:any) {
+
+    function drawLine(x1:any, y1:any, x2:any, y2:any) {
+      ctx.beginPath();
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x2, y2);
+      ctx.stroke();
+      ctx.closePath();
+    }
+
+    function Line(x1:any, y1:any, x2:any, y2:any) {
       if (isDrawing) {
         ctx.putImageData(data, 0, 0);}
      
@@ -225,8 +329,8 @@ export class CanvasComponent implements OnInit {
       ctx.beginPath();
     }
    
-    function Triangle(x1: any,y1: any,x2: any, y2:any) {
-      let first =Math.abs (x2 - x1) * 2;
+    function Triangle(x1:any, y1:any, x2:any, y2:any) {
+      let first = Math.abs (x2 - x1) * 2;
       ctx.moveTo(x1, y1);
       ctx.lineTo(x2 - first, y2);
       ctx.lineTo(x2, y2);
@@ -241,13 +345,26 @@ export class CanvasComponent implements OnInit {
 
       for(let i=0 ; i<n; i++){
         const a = i * angle ;
-        ctx.lineTo(x1 + r * Math.cos(a) , y1 + r * Math.sin(a));
+        ctx.lineTo(x1 + r * Math.cos(a), y1 + r * Math.sin(a));
       }
       ctx.closePath();
       ctx.stroke();
       ctx.beginPath();
     }
    
+    function Rhomboid(x1:any, y1:any, x2:any, y2:any) {
+      let w = Math.abs(x1 - x2);
+      let h = Math.abs(y1 - y2);
+      ctx.moveTo(x1, y1);
+      ctx.lineTo(x1 + w, y1);
+      ctx.lineTo(x1 + w + h * Math.cos(45), y1 + h);
+      ctx.lineTo(x1 + h * Math.cos(45), y1 + h);
+      ctx.lineTo(x1, y1);
+      ctx.closePath();
+      ctx.stroke();
+      ctx.beginPath();
+    }
+
     function Rectangle(x1:any, y1:any, x2:any, y2:any) {
       let w = Math.abs(x1 - x2);
       let h = Math.abs(y1 - y2);
@@ -272,18 +389,73 @@ export class CanvasComponent implements OnInit {
       ctx.stroke();
       ctx.beginPath();
     }
+
+    function Star(x1:any, y1:any, x2:any, y2:any) {
+      var rot = Math.PI/2*3;
+      let outerRadius = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+      let innerRadius = outerRadius*(2/3);
+      var x = x1; var y = y1;
+      var step = Math.PI/5;
+
+      ctx.moveTo(x1, y1-outerRadius);
+      for(var i=0; i<5; i++){
+        x = x1 + Math.cos(rot)*outerRadius;
+        y = y1 + Math.sin(rot)*outerRadius;
+        ctx.lineTo(x,y);
+        rot += step;
+        
+        x = x1 + Math.cos(rot)*innerRadius;
+        y = y1 + Math.sin(rot)*innerRadius;
+        ctx.lineTo(x,y);
+        rot += step;
+      }
+      ctx.lineTo(x1, y1-outerRadius);
+      ctx.closePath();
+      ctx.stroke();
+      ctx.beginPath();
+    }
+
+    function Heart(x1:any, y1:any, x2:any, y2:any) {
+      var x = x1;
+      var y = y1;
+      var w = Math.abs(x1 - x2) ;
+      var h = Math.abs(y1 - y2);
+
+      var topCurveHeight = h * 0.3;
+      ctx.moveTo(x, y + topCurveHeight);
+      // top left curve
+      ctx.bezierCurveTo(
+        x, y, 
+        x - w / 2, y, 
+        x - w / 2, y + topCurveHeight
+      );
+
+      // bottom left curve
+      ctx.bezierCurveTo(
+        x - w / 2, y + (h + topCurveHeight) / 2, 
+        x, y + (h + topCurveHeight) / 2, 
+        x, y + h
+      );
+ 
+      // bottom right curve
+      ctx.bezierCurveTo(
+        x, y + (h + topCurveHeight) / 2, 
+        x + w / 2, y + (h + topCurveHeight) / 2, 
+        x + w / 2, y + topCurveHeight
+      );
+  
+      // top right curve
+      ctx.bezierCurveTo(
+        x + w / 2, y, 
+        x, y, 
+        x, y + topCurveHeight
+      );
+      ctx.closePath();
+      ctx.stroke();
+      ctx.beginPath();
+    }
    
-      /* function drawFLine(context: { beginPath: () => void; strokeStyle: any; lineWidth: number; moveTo: (arg0: any, arg1: any) => void; lineTo: (arg0: any, arg1: any) => void; stroke: () => void; closePath: () => void; }, x1: number, y1: number, x2: number, y2: number) {
-         context.beginPath();
-         context.strokeStyle =  'red';
-         context.lineWidth = 1;
-         context.moveTo(x1, y1);
-         context.lineTo(x2, y2);
-         context.stroke();
-         context.closePath();
-       }
-       
-   */
-   } 
+     
+  } 
 
 }

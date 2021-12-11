@@ -7,6 +7,9 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'paint-front';
+
+  pencilEvent!: Event;
+
   lineEvent!: Event;
   triEvent!: Event;
   rhomboidEvent!: Event;
@@ -18,6 +21,17 @@ export class AppComponent {
   heptEvent!: Event;
   circEvent!: Event;
   elliEvent!: Event;
+  starEvent!: Event;
+  heartEvent!: Event;
+
+  widthChange!: string;
+  dashChange!: string;
+  colorChange!: string;
+  colorFillChange!: string;
+
+  onChangePencil(event: Event) {
+    this.pencilEvent = event;
+  }
 
   onChangeLine(event: Event) {
     this.lineEvent = event;
@@ -52,5 +66,23 @@ export class AppComponent {
   onChangeElli(event: Event) {
     this.elliEvent = event;
   }
+  onChangeStar(event: Event) {
+    this.starEvent = event;
+  }
+  onChangeHeart(event: Event) {
+    this.heartEvent = event;
+  }
 
+  onChangeWidth(width: any) {
+    this.widthChange = width;
+  }
+  onChangeDash(dash: any) {
+    this.dashChange = dash;
+  }
+  onChangeColor(color: any) {
+    this.colorChange = color;
+  }
+  onChangeColorFill(color: any) {
+    this.colorFillChange = color;
+  }
 }

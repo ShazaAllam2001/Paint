@@ -11,7 +11,7 @@
         <img src="../assets/tools/icons8-erase-48.png" width="24" height="24"/>
     </button>
 
-    <button class="tool-btn" title="Pencil Tool">
+    <button id="pencil" class="tool-btn" title="Pencil Tool" (click)="pencil($event)">
         <img src="../assets/tools/icons8-pencil-48.png" width="24" height="24"/>
     </button>
 
@@ -21,10 +21,6 @@
 
     <button class="tool-btn" title="Line Tool" (click)="drawLine($event)">
         <img src="../assets/shapes/icons8-line-48.png" width="24" height="24"/>
-    </button>
-
-    <button class="tool-btn" title="Polyline Tool">
-        <img src="../assets/shapes/flaticon-polyline-48.png" width="24" height="24"/>
     </button>
 
     <button class="tool-btn" title="Triangle Tool" (click)="drawTriangle($event)"> 
@@ -82,8 +78,12 @@
         </div>
     </div>
     
-    <button class="tool-btn" title="Star Tool">
+    <button class="tool-btn" title="Star Tool" (click)="drawStar($event)">
         <img src="../assets/shapes/icons8-star-48.png" width="24" height="24"/>
+    </button>
+
+    <button class="tool-btn" title="Heart Tool" (click)="drawHeart($event)">
+        <img src="../assets/shapes/icons8-heart-48.png" width="24" height="24"/>
     </button>
 
     <button class="tool-btn" title="Add custom shape">
