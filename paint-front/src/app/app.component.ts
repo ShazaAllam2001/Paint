@@ -7,6 +7,8 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'paint-front';
+  
+  gridChange!: boolean;
 
   pencilEvent!: Event;
   eraseEvent!: Event;
@@ -31,6 +33,10 @@ export class AppComponent {
   dashChange!: string;
   colorChange!: string;
   colorFillChange!: string;
+
+  onChangeGrid(grid: any) {
+    this.gridChange = grid;
+  }
 
   onChangePencil(event: Event) {
     this.pencilEvent = event;
