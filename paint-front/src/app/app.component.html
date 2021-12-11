@@ -1,5 +1,6 @@
 <div id="app">
-  <app-menu-bar></app-menu-bar>
+  <app-menu-bar (gridShow)="onChangeGrid($event)"
+  ></app-menu-bar>
 
   <div class="content">
     <app-tool-box (pencilDraw)="onChangePencil($event)"
@@ -20,7 +21,9 @@
                   (heartDraw)="onChangeHeart($event)"
     ></app-tool-box>
     <div>
-      <app-canvas [pencilEvent]="pencilEvent"
+      <app-canvas [gridChange]="gridChange"
+                  
+                  [pencilEvent]="pencilEvent"
                   [eraseEvent]="eraseEvent"
                   [textEvent]="textEvent"
                   [lineEvent]="lineEvent"
@@ -36,6 +39,7 @@
                   [elliEvent]="elliEvent"
                   [starEvent]="starEvent"
                   [heartEvent]="heartEvent"
+                  
                   [fontChange]="fontChange"
                   [widthChange]="widthChange"
                   [dashChange]="dashChange"
