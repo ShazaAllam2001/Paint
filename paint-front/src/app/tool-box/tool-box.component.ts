@@ -7,6 +7,8 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 })
 export class ToolBoxComponent implements OnInit {
   @Output() pencilDraw = new EventEmitter<Event>();
+  @Output() eraseAction = new EventEmitter<Event>();
+  @Output() textDraw = new EventEmitter<Event>();
 
   @Output() lineDraw = new EventEmitter<Event>();
   @Output() triDraw = new EventEmitter<Event>();
@@ -29,6 +31,12 @@ export class ToolBoxComponent implements OnInit {
 
   pencil(event: Event) {
     this.pencilDraw.emit(event);
+  }
+  erase(event: Event) {
+    this.eraseAction.emit(event);
+  }
+  addText(event: Event) {
+    this.textDraw.emit(event);
   }
 
   drawLine(event: Event) {

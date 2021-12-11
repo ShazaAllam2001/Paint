@@ -9,6 +9,7 @@ export class CanvasComponent implements OnInit {
   grid_cnv: HTMLCanvasElement | null = null;
   draw_cnv: HTMLCanvasElement | null = null;
   ctx: any = null;
+  line_width: number = 1.5;
   isDrawing: boolean = false;
   s: string = '';
   data: any = null;
@@ -40,6 +41,21 @@ export class CanvasComponent implements OnInit {
   set pencilEvent(pencilEvent: Event) {
     if(pencilEvent) {
       this.s = "Pencil";
+      this.draw(this.s);
+    }
+  }
+  @Input()
+  set eraseEvent(eraseEvent: Event) {
+    if(eraseEvent) { 
+      this.s = "Erase";
+      this.storeWidth();
+      this.draw(this.s);
+    }
+  }
+  @Input()
+  set textEvent(textEvent: Event) {
+    if(textEvent) {
+      this.s = "Text";
       this.draw(this.s);
     }
   }
@@ -143,9 +159,10 @@ export class CanvasComponent implements OnInit {
     this.draw_cnv = cnv[0];
     this.grid_cnv = cnv[1];
     this.ctx = this.draw_cnv.getContext("2d");
-    if(this.ctx)
-      this.ctx.strokeStyle = "black";
-      this.ctx.lineWidth = 1.5;
+    this.ctx.lineWidth = 1.5;
+    this.ctx.strokeStyle = "black";
+    this.ctx.fillStyle = "black";
+    this.ctx.font = "25px Arial";
     this.drawGrid();
   }
 
@@ -199,6 +216,16 @@ export class CanvasComponent implements OnInit {
     }
   }
   
+  storeWidth() {
+    if(this.draw_cnv) {
+      var ctx = this.draw_cnv.getContext("2d");
+      if(ctx) {
+        this.line_width = ctx.lineWidth;
+        return this.line_width;
+      }
+    } 
+    return 0;
+  }
   changeWidth(width: string) {
     var ctx = this.draw_cnv?.getContext("2d");
     if(ctx) 
@@ -233,9 +260,11 @@ export class CanvasComponent implements OnInit {
 
   draw(s:string){
     let isDrawing = false;
-    let data = ''; let x=0; let y=0;
+    let data = ''; let x = 0; let y = 0;
     var cnv: HTMLCanvasElement | null;
     var ctx: any;
+    var line_width: number | null = this.line_width;
+    var old:any = null;
     cnv = document.getElementsByTagName("canvas")[0];
     ctx = cnv.getContext("2d");
     data = ctx.getImageData(0, 0, cnv.width, cnv.height);
@@ -247,6 +276,9 @@ export class CanvasComponent implements OnInit {
       x = e.offsetX;
       y = e.offsetY;
       isDrawing = true;
+      if(s === 'Erase') {
+        old = {x: e.offsetX, y: e.offsetY};
+      }
     });   
    
     cnv.addEventListener('mousemove', e => {
@@ -257,6 +289,10 @@ export class CanvasComponent implements OnInit {
           drawLine(x, y, e.offsetX, e.offsetY);
           x = e.offsetX;
           y = e.offsetY;
+        } else if(this.s==='Erase') {
+          x = e.offsetX;
+          y = e.offsetY;
+          Erase(x, y);
         } else {
           check(s, x, y, e.offsetX, e.offsetY);
         }
@@ -269,20 +305,23 @@ export class CanvasComponent implements OnInit {
       if (isDrawing === true) {
         if(s===''||this.s==='Pencil'){
           drawLine(x, y, e.offsetX, e.offsetY);
+        } else if (this.s=='Erase') {
         } else{
           check(s, x, y, e.offsetX, e.offsetY);
         }
         x = 0;
         y = 0;
         isDrawing = false;
-      }
+      }     
     });
 
-    function check (s:string,x1: any,y1: any,x2: any, y2:any){
+    function check (s:string, x1:any, y1:any, x2:any, y2:any){
       if (isDrawing) {
         ctx.putImageData(data, 0, 0);}
     
       switch(s){
+        case 'Text': addText(x1,y1,x2,y2);
+          break;
         case 'Line': Line(x1,y1,x2,y2);
           break; 
         case 'Tri': Triangle(x1,y1,x2,y2);
@@ -310,18 +349,43 @@ export class CanvasComponent implements OnInit {
       }
     }
 
+    function Erase(x:any, y:any) {
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.beginPath();
+      ctx.arc(x, y, 10, 0, 2 * Math.PI);
+      ctx.fill();
+      ctx.lineWidth = 20;
+      ctx.beginPath();
+      if(old)
+        ctx.moveTo(old.x, old.y);
+      ctx.lineTo(x, y);
+      ctx.closePath();
+      ctx.stroke();
+      ctx.lineWidth = line_width;
+      old = {x: x, y: y};
+    }
+
     function drawLine(x1:any, y1:any, x2:any, y2:any) {
+      ctx.globalCompositeOperation = 'source-over';
       ctx.beginPath();
       ctx.moveTo(x1, y1);
       ctx.lineTo(x2, y2);
       ctx.stroke();
       ctx.closePath();
+      ctx.beginPath();
+    }
+
+    function addText(x1:any, y1:any, x2:any, y2:any) {
+      let maxWidth = Math.abs(x1 - x2);
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillText("Text", x1, y1, maxWidth);
     }
 
     function Line(x1:any, y1:any, x2:any, y2:any) {
       if (isDrawing) {
-        ctx.putImageData(data, 0, 0);}
-     
+        ctx.putImageData(data, 0, 0);
+      }
+      ctx.globalCompositeOperation = 'source-over';
       ctx.moveTo(x1, y1);
       ctx.lineTo(x2, y2);
       ctx.closePath();
@@ -331,6 +395,7 @@ export class CanvasComponent implements OnInit {
    
     function Triangle(x1:any, y1:any, x2:any, y2:any) {
       let first = Math.abs (x2 - x1) * 2;
+      ctx.globalCompositeOperation = 'source-over';
       ctx.moveTo(x1, y1);
       ctx.lineTo(x2 - first, y2);
       ctx.lineTo(x2, y2);
@@ -342,7 +407,7 @@ export class CanvasComponent implements OnInit {
     function polygonal(x1:any, y1:any, x2:any, y2:any, n:any) {
       let r = Math.abs(x1 - x2);
       let angle = (2*Math.PI)/n;
-
+      ctx.globalCompositeOperation = 'source-over';
       for(let i=0 ; i<n; i++){
         const a = i * angle ;
         ctx.lineTo(x1 + r * Math.cos(a), y1 + r * Math.sin(a));
@@ -355,6 +420,7 @@ export class CanvasComponent implements OnInit {
     function Rhomboid(x1:any, y1:any, x2:any, y2:any) {
       let w = Math.abs(x1 - x2);
       let h = Math.abs(y1 - y2);
+      ctx.globalCompositeOperation = 'source-over';
       ctx.moveTo(x1, y1);
       ctx.lineTo(x1 + w, y1);
       ctx.lineTo(x1 + w + h * Math.cos(45), y1 + h);
@@ -368,6 +434,7 @@ export class CanvasComponent implements OnInit {
     function Rectangle(x1:any, y1:any, x2:any, y2:any) {
       let w = Math.abs(x1 - x2);
       let h = Math.abs(y1 - y2);
+      ctx.globalCompositeOperation = 'source-over';
       ctx.closePath();
       ctx.strokeRect(x1, y1, w, h);
       ctx.beginPath();  
@@ -375,6 +442,7 @@ export class CanvasComponent implements OnInit {
    
     function Circle(x1:any ,y1:any, x2:any, y2:any) {
       let r = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+      ctx.globalCompositeOperation = 'source-over';
       ctx.arc(x1, y1, r, 0, Math.PI * 2);
       ctx.closePath();
       ctx.stroke();
@@ -384,6 +452,7 @@ export class CanvasComponent implements OnInit {
     function Ellipse(x1:any, y1:any, x2:any, y2:any) { 
       let r1 = Math.abs(x1 - x2);
       let r2 = Math.abs(y1 - y2);
+      ctx.globalCompositeOperation = 'source-over';
       ctx.ellipse(x1, y1, r1, r2, Math.PI, 0, 2 * Math.PI);
       ctx.closePath();
       ctx.stroke();
@@ -396,7 +465,7 @@ export class CanvasComponent implements OnInit {
       let innerRadius = outerRadius*(2/3);
       var x = x1; var y = y1;
       var step = Math.PI/5;
-
+      ctx.globalCompositeOperation = 'source-over';
       ctx.moveTo(x1, y1-outerRadius);
       for(var i=0; i<5; i++){
         x = x1 + Math.cos(rot)*outerRadius;
@@ -420,8 +489,8 @@ export class CanvasComponent implements OnInit {
       var y = y1;
       var w = Math.abs(x1 - x2) ;
       var h = Math.abs(y1 - y2);
-
       var topCurveHeight = h * 0.3;
+      ctx.globalCompositeOperation = 'source-over';
       ctx.moveTo(x, y + topCurveHeight);
       // top left curve
       ctx.bezierCurveTo(

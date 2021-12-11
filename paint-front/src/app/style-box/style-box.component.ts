@@ -18,6 +18,9 @@ export class StyleBoxComponent implements OnInit {
   ngOnInit(): void {
   }
   
+  changeFont() {
+    
+  }
   changeWidth() {
     var stroke_width = document.getElementsByTagName("input")[1];
     this.widthChange.emit(stroke_width.value);

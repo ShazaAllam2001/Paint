@@ -9,6 +9,8 @@ export class AppComponent {
   title = 'paint-front';
 
   pencilEvent!: Event;
+  eraseEvent!: Event;
+  textEvent!: Event;
 
   lineEvent!: Event;
   triEvent!: Event;
@@ -31,6 +33,12 @@ export class AppComponent {
 
   onChangePencil(event: Event) {
     this.pencilEvent = event;
+  }
+  onChangeErase(event: Event) {
+    this.eraseEvent = event;
+  }
+  onChangeText(event: Event) {
+    this.textEvent = event;
   }
 
   onChangeLine(event: Event) {

@@ -3,6 +3,8 @@
 
   <div class="content">
     <app-tool-box (pencilDraw)="onChangePencil($event)"
+                  (eraseAction)="onChangeErase($event)"
+                  (textDraw)="onChangeText($event)"
                   (lineDraw)="onChangeLine($event)"
                   (triDraw)="onChangeTri($event)"
                   (rhomboidDraw)="onChangeRhomboid($event)"
@@ -19,6 +21,8 @@
     ></app-tool-box>
     <div>
       <app-canvas [pencilEvent]="pencilEvent"
+                  [eraseEvent]="eraseEvent"
+                  [textEvent]="textEvent"
                   [lineEvent]="lineEvent"
                   [triEvent]="triEvent"
                   [rhomboidEvent]="rhomboidEvent"
