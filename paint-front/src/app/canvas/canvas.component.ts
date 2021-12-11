@@ -15,30 +15,29 @@ export class CanvasComponent implements OnInit {
   data: any = null;
   dash: number[] = [0, 5, 10, 15];
 
+  @Input()
+  set gridChange(gridChange: boolean) {
+    this.changeGrid(gridChange);
+  }
   /* Styling */
   @Input()
   set fontChange(fontChange: string) {
-    if(fontChange) 
       this.changeFont(fontChange);
   }
   @Input()
-  set widthChange(widthChange: string) {
-    if(widthChange) 
+  set widthChange(widthChange: string) { 
       this.changeWidth(widthChange);
   }
   @Input()
   set dashChange(dashChange: string) {
-    if(dashChange) 
       this.changeDash(dashChange);
   }
   @Input()
   set colorChange(colorChange: string) {
-    if(colorChange) 
       this.changeColor(colorChange);
   }
   @Input()
   set colorFillChange(colorFillChange: string) {
-    if(colorFillChange) 
       this.changeColorFill(colorFillChange);
   }
   /* Tools */
@@ -220,7 +219,20 @@ export class CanvasComponent implements OnInit {
       ctx?.closePath();
     }
   }
-  
+  clearGrid() {
+    if(this.grid_cnv) {
+      var ctx = this.grid_cnv.getContext("2d");
+      if(ctx) 
+        ctx.clearRect(0, 0, this.grid_cnv.width, this.grid_cnv.height);
+    } 
+  }
+  changeGrid(grid: boolean) {
+    if(grid) {
+      this.drawGrid();
+    } else {
+      this.clearGrid();
+    }
+  }
   storeWidth() {
     if(this.draw_cnv) {
       var ctx = this.draw_cnv.getContext("2d");
@@ -235,7 +247,6 @@ export class CanvasComponent implements OnInit {
     var ctx = this.draw_cnv?.getContext("2d");
     if(ctx) 
       ctx.font = font;
-    console.log(font);
   }
   changeWidth(width: string) {
     var ctx = this.draw_cnv?.getContext("2d");
