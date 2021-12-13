@@ -9,6 +9,7 @@ export class Point {
 export class Shape {
     lineColor: string = '';
     lineWidth: number = 1.5;
+    draw(ctx: CanvasRenderingContext2D) {}
 }
 export class ClosedShape extends Shape {
     fillColor: string = '';
@@ -33,7 +34,7 @@ export class Text extends Shape {
         this.lineColor = lineColor;
         this.lineWidth = lineWidth;
     }
-    draw(ctx: CanvasRenderingContext2D) {
+    override draw(ctx: CanvasRenderingContext2D) {
         ctx.globalCompositeOperation = 'source-over';
         ctx.strokeText(this.text, this.topRight.x, this.topRight.y, this.maxWidth);
         ctx.fillText(this.text, this.topRight.x, this.topRight.y, this.maxWidth);
@@ -49,7 +50,7 @@ export class LineSegment extends Shape {
         this.lineColor = lineColor;
         this.lineWidth = lineWidth;
     }
-    draw(ctx: CanvasRenderingContext2D) {
+    override draw(ctx: CanvasRenderingContext2D) {
         ctx.globalCompositeOperation = 'source-over';
         ctx.moveTo(this.point1.x, this.point1.y);
         ctx.lineTo(this.point2.x, this.point2.y);
@@ -66,7 +67,7 @@ export class Triangle extends Polygon {
         this.lineWidth = lineWidth;
         this.fillColor = fillColor;
     }
-    draw(ctx: CanvasRenderingContext2D) {
+    override draw(ctx: CanvasRenderingContext2D) {
         ctx.globalCompositeOperation = 'source-over';
         if(this.points) {
             ctx.moveTo(this.points[0].x, this.points[0].y);
@@ -87,10 +88,10 @@ export class Polygonal extends Polygon {
         this.lineWidth = lineWidth;
         this.fillColor = fillColor;
     }
-    draw(ctx: CanvasRenderingContext2D, n: number) {
+    override draw(ctx: CanvasRenderingContext2D) {
         ctx.globalCompositeOperation = 'source-over';
         if(this.points) {
-            for(let i=0 ; i<n; i++){
+            for(let i=0 ; i<this.points.length; i++){
                 ctx.lineTo(this.points[i].x, this.points[i].y);
             }
         }
@@ -108,7 +109,7 @@ export class Rhomboid extends Polygon {
         this.lineWidth = lineWidth;
         this.fillColor = fillColor;
     }
-    draw(ctx: CanvasRenderingContext2D) {
+    override draw(ctx: CanvasRenderingContext2D) {
         ctx.globalCompositeOperation = 'source-over';
         if(this.points) {
             ctx.moveTo(this.points[0].x, this.points[0].y);
@@ -156,7 +157,7 @@ export class Ellipse extends ClosedShape {
         this.lineWidth = lineWidth;
         this.fillColor = fillColor;
     }
-    draw(ctx: CanvasRenderingContext2D) {
+    override draw(ctx: CanvasRenderingContext2D) {
         ctx.globalCompositeOperation = 'source-over';
         if(this.center) {
             ctx.ellipse(this.center.x, this.center.y, this.radiusX, this.radiusY, Math.PI, 0, 2 * Math.PI);
@@ -177,7 +178,7 @@ export class Circle extends ClosedShape {
         this.lineWidth = lineWidth;
         this.fillColor = fillColor;
     }
-    draw(ctx: CanvasRenderingContext2D) {
+    override draw(ctx: CanvasRenderingContext2D) {
         ctx.globalCompositeOperation = 'source-over';
         if(this.center) {
             ctx.arc(this.center.x, this.center.y, this.radius, 0, Math.PI * 2);
@@ -198,7 +199,7 @@ export class Star extends ClosedShape {
         this.lineWidth = lineWidth;
         this.fillColor = fillColor;
     }
-    draw(ctx: CanvasRenderingContext2D) {
+    override draw(ctx: CanvasRenderingContext2D) {
         if(this.center) {
             var rot = Math.PI/2*3;
             let innerRadius = this.outerRadius*(2/3);
@@ -238,7 +239,7 @@ export class Heart extends ClosedShape {
         this.lineWidth = lineWidth;
         this.fillColor = fillColor;
     }
-    draw(ctx: CanvasRenderingContext2D) {
+    override draw(ctx: CanvasRenderingContext2D) {
         if(this.center) {
             var x = this.center.x;
             var y = this.center.y;

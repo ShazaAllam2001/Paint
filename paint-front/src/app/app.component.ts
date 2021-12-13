@@ -10,6 +10,7 @@ export class AppComponent {
   
   gridChange!: boolean;
 
+  panningEvent!: Event;
   pencilEvent!: Event;
   eraseEvent!: Event;
   textEvent!: Event;
@@ -40,6 +41,9 @@ export class AppComponent {
     this.gridChange = grid;
   }
 
+  onChangePan(event: Event) {
+    this.panningEvent = event;
+  }
   onChangePencil(event: Event) {
     this.pencilEvent = event;
   }

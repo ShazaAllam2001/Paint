@@ -13,7 +13,7 @@ export class CanvasComponent implements OnInit {
   isDrawing: boolean = false;
   s: string = '';
   dash: number[] = [0, 5, 10, 15];
-  data: any = []; //
+  data!: shapes.Shape[];
 
   @Input()
   set gridChange(gridChange: boolean) {
@@ -52,10 +52,17 @@ export class CanvasComponent implements OnInit {
   }
   /* Tools */
   @Input()
+  set panningEvent(panningEvent: Event) {
+    if(panningEvent) {
+      this.s = "Pan";
+      this.draw();
+    }
+  }
+  @Input()
   set pencilEvent(pencilEvent: Event) {
     if(pencilEvent) {
       this.s = "Pencil";
-      this.draw(this.s);
+      this.draw();
     }
   }
   @Input()
@@ -63,14 +70,14 @@ export class CanvasComponent implements OnInit {
     if(eraseEvent) { 
       this.s = "Erase";
       this.storeWidth();
-      this.draw(this.s);
+      this.draw();
     }
   }
   @Input()
   set textEvent(textEvent: Event) {
     if(textEvent) {
       this.s = "Text";
-      this.draw(this.s);
+      this.draw();
     }
   }
   /* Shapes Input */
@@ -78,91 +85,91 @@ export class CanvasComponent implements OnInit {
   set lineEvent(lineEvent: Event) {
     if(lineEvent) {
       this.s = 'Line';
-      this.draw(this.s);
+      this.draw();
     }     
   }
   @Input()
   set triEvent(triEvent: Event) {
     if(triEvent) {
       this.s = 'Tri';
-      this.draw(this.s);
+      this.draw();
     }
   }
   @Input()
   set rhomboidEvent(rhomboidEvent: Event) {
     if(rhomboidEvent) {
       this.s = 'Rhomboid';
-      this.draw(this.s);
+      this.draw();
     }
   }
   @Input()
   set rectEvent(rectEvent: Event) {
     if(rectEvent) {
       this.s = 'Rect';
-      this.draw(this.s);
+      this.draw();
     }
   }
   @Input()
     set rhombusEvent(rhombusEvent: Event) {
       if(rhombusEvent) {
         this.s = 'Rhombus';
-        this.draw(this.s);
+        this.draw();
       }
   }
   @Input()
     set trapezoidEvent(trapezoidEvent: Event) {
       if(trapezoidEvent) {
         this.s = 'Trape';
-        this.draw(this.s);
+        this.draw();
       }
   } 
   @Input()
     set pentEvent(pentEvent: Event) {
       if(pentEvent) {
         this.s = 'Pent';
-        this.draw(this.s);
+        this.draw();
       }
   }  
   @Input()
     set hexEvent(hexEvent: Event) {
       if(hexEvent) {
         this.s = 'Hex';
-        this.draw(this.s);
+        this.draw();
       }
   }  
   @Input()
     set heptEvent(heptEvent: Event) {
       if(heptEvent) {
         this.s = 'Hept';
-        this.draw(this.s);
+        this.draw();
       }
   } 
   @Input()
     set circEvent(circEvent: Event) {
       if(circEvent) {
         this.s = 'Circ';
-        this.draw(this.s);
+        this.draw();
       }
   }  
   @Input()
     set elliEvent(elliEvent: Event) {
       if(elliEvent) {
         this.s = 'Elli';
-        this.draw(this.s);
+        this.draw();
       }
   }  
   @Input()
     set starEvent(starEvent: Event) {
       if(starEvent) {
         this.s = 'Star';
-        this.draw(this.s);
+        this.draw();
       } 
   }  
   @Input()
     set heartEvent(heartEvent: Event) {
       if(heartEvent) {
         this.s = 'Heart';
-        this.draw(this.s);
+        this.draw();
       }
   }    
 
@@ -179,7 +186,9 @@ export class CanvasComponent implements OnInit {
       ctx.fillStyle = "transparent";
       ctx.font = "25px Arial";
     }
+    this.data = [];
     this.drawGrid();
+    this.draw();
   }
 
   drawGrid() {
@@ -267,6 +276,8 @@ export class CanvasComponent implements OnInit {
       for(let i=0; i<this.data.length; i++) {
         this.data[i].draw(ctx);//
       }
+      ctx.setTransform(1,0,0,1,0,0);
+      ctx.translate(0,0);
     }
   }
   zoomIn() {
@@ -312,9 +323,13 @@ export class CanvasComponent implements OnInit {
       ctx.fillStyle = color;
   }
 
-  draw(s:string){
+  draw(){
     let isDrawing = false;
-    let Data = ''; let x = 0; let y = 0;
+    let Data = ''; 
+    let x = 0; let y = 0;
+    var dragStart: any;
+    var dragEnd: any;
+    var m = [1, 0, 0, 1, 0, 0];
     var state: any = [];//
     var cnv: HTMLCanvasElement | null;
     var ctx: any;
@@ -331,8 +346,14 @@ export class CanvasComponent implements OnInit {
       x = e.offsetX;
       y = e.offsetY;
       isDrawing = true;
-      if(s === 'Erase') {
+      if(this.s === 'Erase') {
         old = {x: e.offsetX, y: e.offsetY};
+      } else if(this.s === 'Pan') {
+        var cit = transformPoint(e.pageX, e.pageY);
+        dragStart = {
+          x: cit.x - cnv.offsetLeft,
+          y: cit.y - cnv.offsetTop
+        }
       }
     });   
    
@@ -340,7 +361,7 @@ export class CanvasComponent implements OnInit {
       cnv = document.getElementsByTagName("canvas")[0];
       ctx = cnv.getContext("2d");
       if (isDrawing === true) {
-        if(s===''||this.s==='Pencil') {
+        if(this.s===''||this.s==='Pencil') {
           drawLine(x, y, e.offsetX, e.offsetY);
           x = e.offsetX;
           y = e.offsetY;
@@ -348,8 +369,16 @@ export class CanvasComponent implements OnInit {
           x = e.offsetX;
           y = e.offsetY;
           Erase(x, y);
+        } else if(this.s==='Pan') {
+          var cit = transformPoint(e.pageX, e.pageY);
+          dragEnd = {
+            x: cit.x - cnv.offsetLeft,
+            y: cit.y - cnv.offsetTop
+          }
+          Pan(dragStart, dragEnd);
+          dragStart = dragEnd;
         } else {
-          check(s, x, y, e.offsetX, e.offsetY);
+          check(this.s, x, y, e.offsetX, e.offsetY);
         }
       }
     });
@@ -358,16 +387,15 @@ export class CanvasComponent implements OnInit {
       cnv = document.getElementsByTagName("canvas")[0];
       ctx = cnv.getContext("2d");
       if (isDrawing === true) {
-        if(s===''||this.s==='Pencil'){
+        if(this.s===''||this.s==='Pencil'){
           drawLine(x, y, e.offsetX, e.offsetY);
-        } else if (this.s=='Erase') {
+        } else if (this.s==='Erase'||this.s==='Pan') {
         } else{
-          check(s, x, y, e.offsetX, e.offsetY);
+          check(this.s, x, y, e.offsetX, e.offsetY);
         }
         x = 0;
         y = 0;
         isDrawing = false;
-        console.log("state",state[state.length-1]);
         this.data.push(state[state.length-1]); //
       }     
     });
@@ -406,6 +434,38 @@ export class CanvasComponent implements OnInit {
         case 'Heart': Heart(x1,y1,x2,y2);
           break;    
       }
+    }
+
+    function transformPoint(px: any, py:any) {
+      var x = px;
+      var y = py;
+      px = x * m[0] + y * m[2] + m[4];
+      py = x * m[1] + y * m[3] + m[5];
+      return {
+        x: px,
+        y: py
+      }
+    }
+    
+    function matrixTranslate(x: any, y: any) {
+      m[4] += m[0] * x + m[2] * y;
+      m[5] += m[1] * x + m[3] * y;
+    }
+
+    const Pan = (dragStart:any, dragEnd: any) => {
+      matrixTranslate(dragEnd.x - dragStart.x, dragEnd.y - dragStart.y);
+      ctx.setTransform(m[0],0,0,m[3], dragEnd.x - dragStart.x, dragEnd.y - dragStart.y);
+      if(cnv) {
+        ctx.save();
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.clearRect(0, 0, cnv.width, cnv.height);
+        ctx.restore();
+      }
+      // draw canvas
+      for(let i=0; i<this.data.length; i++) {
+        this.data[i].draw(ctx);//
+      }
+      ctx.translate(dragStart.x - dragEnd.x, dragStart.y - dragEnd.y);
     }
 
     function Erase(x:any, y:any) {
@@ -447,9 +507,6 @@ export class CanvasComponent implements OnInit {
     }
 
     function Line(x1:any, y1:any, x2:any, y2:any) {
-      if (isDrawing) {
-        ctx.putImageData(Data, 0, 0);
-      }
       var line = new shapes.LineSegment(new shapes.Point(x1,y1),
                                         new shapes.Point(x2,y2),
                                         ctx.strokeStyle,
@@ -483,7 +540,7 @@ export class CanvasComponent implements OnInit {
                                         ctx.strokeStyle,
                                         ctx.lineWidth,
                                         ctx.fillStyle);
-      polygonal.draw(ctx, n);
+      polygonal.draw(ctx);
       state.push(polygonal);//
     }
    

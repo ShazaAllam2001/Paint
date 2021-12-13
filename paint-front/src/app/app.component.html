@@ -3,7 +3,8 @@
   ></app-menu-bar>
 
   <div class="content">
-    <app-tool-box (pencilDraw)="onChangePencil($event)"
+    <app-tool-box (panningAction)="onChangePan($event)"
+                  (pencilDraw)="onChangePencil($event)"
                   (eraseAction)="onChangeErase($event)"
                   (textDraw)="onChangeText($event)"
                   (lineDraw)="onChangeLine($event)"
@@ -23,6 +24,7 @@
     <div>
       <app-canvas [gridChange]="gridChange"
                   
+                  [panningEvent]="panningEvent"
                   [pencilEvent]="pencilEvent"
                   [eraseEvent]="eraseEvent"
                   [textEvent]="textEvent"
