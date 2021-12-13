@@ -40,6 +40,8 @@
                   [starEvent]="starEvent"
                   [heartEvent]="heartEvent"
                   
+                  [zoomInChange]="zoomInChange"
+                  [zoomOutChange]="zoomOutChange"
                   [fontChange]="fontChange"
                   [widthChange]="widthChange"
                   [dashChange]="dashChange"
@@ -48,7 +50,9 @@
       ></app-canvas>
       <app-nav-bar></app-nav-bar>
     </div>
-    <app-style-box (fontChange)="onChangeFont($event)"
+    <app-style-box (zoomInChange)="onChangeZoomIn($event)"
+                   (zoomOutChange)="onChangeZoomOut($event)"
+                   (fontChange)="onChangeFont($event)"
                    (widthChange)="onChangeWidth($event)"
                    (dashChange)="onChangeDash($event)"
                    (colorChange)="onChangeColor($event)"

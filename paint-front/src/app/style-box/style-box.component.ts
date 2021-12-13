@@ -10,18 +10,35 @@ export class StyleBoxComponent implements OnInit {
   isCapitalized: boolean = false;
   isItalic: boolean = false;
   
+  @Output() zoomInChange = new EventEmitter<Event>();
+  @Output() zoomOutChange = new EventEmitter<Event>();
   @Output() fontChange = new EventEmitter<string>();
   @Output() widthChange = new EventEmitter<string>();
   @Output() dashChange = new EventEmitter<string>();
   @Output() colorChange = new EventEmitter<string>();
   @Output() colorFillChange = new EventEmitter<string>();
 
-
   constructor() { }
 
   ngOnInit(): void {
   }
   
+  zoomIn(event: Event) {
+    var zoom_label = document.getElementsByClassName("zoom-ratio")[0];
+    var ratio = parseInt(zoom_label.innerHTML.slice(0,-1));
+    if(ratio<200) {
+      zoom_label.innerHTML = String(ratio+10) + '%';
+      this.zoomInChange.emit(event);
+    }
+  }
+  zoomOut(event: Event) {
+    var zoom_label = document.getElementsByClassName("zoom-ratio")[0];
+    var ratio = parseInt(zoom_label.innerHTML.slice(0,-1));
+    if(ratio>50) {
+      zoom_label.innerHTML = String(ratio-10) + '%';
+      this.zoomOutChange.emit(event);
+    }
+  }
   bold() {
     this.isBold = !this.isBold;
     var bold = document.getElementById("bold");

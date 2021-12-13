@@ -28,6 +28,8 @@ export class AppComponent {
   starEvent!: Event;
   heartEvent!: Event;
 
+  zoomInChange!: Event;
+  zoomOutChange!: Event;
   fontChange!: string;
   widthChange!: string;
   dashChange!: string;
@@ -88,6 +90,12 @@ export class AppComponent {
     this.heartEvent = event;
   }
 
+  onChangeZoomIn(event: Event) {
+    this.zoomInChange = event;
+  }
+  onChangeZoomOut(event: Event) {
+    this.zoomOutChange = event;
+  }
   onChangeFont(font: any) {
     this.fontChange = font;
   }

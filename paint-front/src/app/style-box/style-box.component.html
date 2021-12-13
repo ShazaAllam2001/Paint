@@ -1,11 +1,11 @@
 <div id="style-box">
     <div class="element">
-        <button class="zoom-btn">-</button>
+        <button class="zoom-btn" (click)="zoomOut($event)">-</button>
         <div>
             <label class="right-element">Zoom</label>
             <label class="zoom-ratio">100%</label>
         </div>
-        <button class="zoom-btn right-element">+</button>
+        <button class="zoom-btn right-element" (click)="zoomIn($event)">+</button>
     </div> 
     <div class="element">
         <button id="bold" class="tool-btn" (click)="bold()">
