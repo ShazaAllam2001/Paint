@@ -1,4 +1,4 @@
-import { Component, Input, OnInit} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import * as shapes from './shapes';
 
 @Component({
@@ -11,6 +11,7 @@ export class CanvasComponent implements OnInit {
   draw_cnv: HTMLCanvasElement | null = null;
   line_width: number = 1.5;
   isDrawing: boolean = false;
+  isFilled: boolean = false;
   s: string = '';
   dash: number[] = [0, 5, 10, 15];
   data!: shapes.Shape[];
@@ -48,7 +49,16 @@ export class CanvasComponent implements OnInit {
   }
   @Input()
   set colorFillChange(colorFillChange: string) {
+    if(this.isFilled)
       this.changeColorFill(colorFillChange);
+    else
+      this.changeColorFill("transparent");
+  }
+  @Input()
+  set fillCheck(fillCheck: boolean) {
+    this.isFilled = fillCheck;
+    if(!this.isFilled) 
+      this.changeColorFill("transparent"); 
   }
   /* Tools */
   @Input()

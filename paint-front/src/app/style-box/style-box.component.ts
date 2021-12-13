@@ -1,4 +1,4 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 @Component({
   selector: 'app-style-box',
@@ -17,6 +17,7 @@ export class StyleBoxComponent implements OnInit {
   @Output() dashChange = new EventEmitter<string>();
   @Output() colorChange = new EventEmitter<string>();
   @Output() colorFillChange = new EventEmitter<string>();
+  @Output() fillCheck = new EventEmitter<boolean>();
 
   constructor() { }
 
@@ -103,7 +104,11 @@ export class StyleBoxComponent implements OnInit {
     this.colorChange.emit(stroke_color.value);
   }
   changeColorFill() {
-    var stroke_color = document.getElementsByTagName("input")[4];
-    this.colorFillChange.emit(stroke_color.value);
+    var fill_color = document.getElementsByTagName("input")[4];
+    this.colorFillChange.emit(fill_color.value);
+  }
+  checkFill() {
+    var check_fill = document.getElementsByTagName("input")[5];
+    this.fillCheck.emit(check_fill.checked);
   }
 }

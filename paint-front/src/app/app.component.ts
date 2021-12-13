@@ -36,6 +36,7 @@ export class AppComponent {
   dashChange!: string;
   colorChange!: string;
   colorFillChange!: string;
+  fillCheck!: boolean;
 
   onChangeGrid(grid: any) {
     this.gridChange = grid;
@@ -114,5 +115,8 @@ export class AppComponent {
   }
   onChangeColorFill(color: any) {
     this.colorFillChange = color;
+  }
+  onCheckFill(fill: any) {
+    this.fillCheck = fill;
   }
 }

@@ -49,6 +49,7 @@
                   [dashChange]="dashChange"
                   [colorChange]="colorChange"
                   [colorFillChange]="colorFillChange"
+                  [fillCheck]="fillCheck"
       ></app-canvas>
       <app-nav-bar></app-nav-bar>
     </div>
@@ -59,6 +60,7 @@
                    (dashChange)="onChangeDash($event)"
                    (colorChange)="onChangeColor($event)"
                    (colorFillChange)="onChangeColorFill($event)"
+                   (fillCheck)="onCheckFill($event)"
     ></app-style-box>
   </div>
 
