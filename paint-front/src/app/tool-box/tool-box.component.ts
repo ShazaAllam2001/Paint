@@ -6,6 +6,7 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
   styleUrls: ['./tool-box.component.css']
 })
 export class ToolBoxComponent implements OnInit {
+  @Output() selectAction = new EventEmitter<Event>();
   @Output() panningAction = new EventEmitter<Event>();
   @Output() pencilDraw = new EventEmitter<Event>();
   @Output() eraseAction = new EventEmitter<Event>();
@@ -30,6 +31,9 @@ export class ToolBoxComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  select(event: Event) {
+    this.selectAction.emit(event);
+  }
   panning(event: Event) {
     this.panningAction.emit(event);
   }

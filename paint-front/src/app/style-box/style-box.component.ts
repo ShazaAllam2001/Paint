@@ -16,8 +16,7 @@ export class StyleBoxComponent implements OnInit {
   @Output() widthChange = new EventEmitter<string>();
   @Output() dashChange = new EventEmitter<string>();
   @Output() colorChange = new EventEmitter<string>();
-  @Output() colorFillChange = new EventEmitter<string>();
-  @Output() fillCheck = new EventEmitter<boolean>();
+  @Output() colorFillChange = new EventEmitter<{fillCheck: boolean, fillColor: string}>();
 
   constructor() { }
 
@@ -105,10 +104,7 @@ export class StyleBoxComponent implements OnInit {
   }
   changeColorFill() {
     var fill_color = document.getElementsByTagName("input")[4];
-    this.colorFillChange.emit(fill_color.value);
-  }
-  checkFill() {
     var check_fill = document.getElementsByTagName("input")[5];
-    this.fillCheck.emit(check_fill.checked);
+    this.colorFillChange.emit({fillCheck: check_fill.checked, fillColor: fill_color.value});
   }
 }

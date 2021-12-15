@@ -7,6 +7,7 @@ export class Point {
     }
 }
 export class Shape {
+    path: Path2D | null = null;
     lineColor: string = '';
     lineWidth: number = 1.5;
     draw(ctx: CanvasRenderingContext2D) {}
@@ -23,21 +24,39 @@ export class Polygon extends ClosedShape {
 export class Text extends Shape {
     text: string;
     font: string;
-    topRight: Point;
+    bottomLeft: Point;
     maxWidth: number;
-    constructor(text: string, font: string, topRight: Point, maxWidth: number, lineColor: string, lineWidth: number) {
+    constructor(text: string, bottomLeft: Point, maxWidth: number, font: string, lineColor: string, lineWidth: number) {
         super();
         this.text = text;
-        this.font = font;
-        this.topRight = topRight;
+        this.bottomLeft = bottomLeft;
         this.maxWidth = maxWidth;
+        this.font = font;
         this.lineColor = lineColor;
         this.lineWidth = lineWidth;
     }
     override draw(ctx: CanvasRenderingContext2D) {
         ctx.globalCompositeOperation = 'source-over';
-        ctx.strokeText(this.text, this.topRight.x, this.topRight.y, this.maxWidth);
-        ctx.fillText(this.text, this.topRight.x, this.topRight.y, this.maxWidth);
+        // save context current styling
+        let font = ctx.font;
+        let lineColor = ctx.strokeStyle;
+        let lineWidth = ctx.lineWidth;
+        // change context styling to shape styling
+        ctx.font = this.font;
+        ctx.strokeStyle = this.lineColor;
+        ctx.lineWidth = this.lineWidth;
+        // create path and save it for being used later
+        let path = new Path2D();
+        const h = parseInt(this.font.split("px")[0]);
+        path.rect(this.bottomLeft.x, this.bottomLeft.y - h, this.maxWidth, h);
+        this.path = path;
+        // Draw the shape
+        ctx.strokeText(this.text, this.bottomLeft.x, this.bottomLeft.y, this.maxWidth);
+        ctx.fillText(this.text, this.bottomLeft.x, this.bottomLeft.y, this.maxWidth);
+        // change it back to the previous state 
+        ctx.font = font;
+        ctx.strokeStyle = lineColor;
+        ctx.lineWidth = lineWidth;
     }
 }
 export class LineSegment extends Shape {
@@ -69,15 +88,30 @@ export class Triangle extends Polygon {
     }
     override draw(ctx: CanvasRenderingContext2D) {
         ctx.globalCompositeOperation = 'source-over';
+        // save context current styling
+        let lineColor = ctx.strokeStyle;
+        let lineWidth = ctx.lineWidth;
+        let fillColor = ctx.fillStyle;
+        // change context styling to shape styling
+        ctx.strokeStyle = this.lineColor;
+        ctx.lineWidth = this.lineWidth;
+        ctx.fillStyle = this.fillColor;
+        // create path and save it for being used later
+        let path = new Path2D();
         if(this.points) {
-            ctx.moveTo(this.points[0].x, this.points[0].y);
-            ctx.lineTo(this.points[1].x, this.points[1].y);
-            ctx.lineTo(this.points[2].x, this.points[2].y);
-            ctx.closePath();
-            ctx.stroke();
-            ctx.fill();
+            path.moveTo(this.points[0].x, this.points[0].y);
+            path.lineTo(this.points[1].x, this.points[1].y);
+            path.lineTo(this.points[2].x, this.points[2].y);
+            path.closePath();
+            this.path = path;
+            ctx.stroke(path);
+            ctx.fill(path);
             ctx.beginPath();
         }
+        // change it back to the previous state 
+        ctx.strokeStyle = lineColor;
+        ctx.lineWidth = lineWidth;
+        ctx.fillStyle = fillColor;
     }
 }
 export class Polygonal extends Polygon {
@@ -90,15 +124,30 @@ export class Polygonal extends Polygon {
     }
     override draw(ctx: CanvasRenderingContext2D) {
         ctx.globalCompositeOperation = 'source-over';
+        // save context current styling
+        let lineColor = ctx.strokeStyle;
+        let lineWidth = ctx.lineWidth;
+        let fillColor = ctx.fillStyle;
+        // change context styling to shape styling
+        ctx.strokeStyle = this.lineColor;
+        ctx.lineWidth = this.lineWidth;
+        ctx.fillStyle = this.fillColor;
+        // create path and save it for being used later
+        let path = new Path2D();
         if(this.points) {
             for(let i=0 ; i<this.points.length; i++){
-                ctx.lineTo(this.points[i].x, this.points[i].y);
+                path.lineTo(this.points[i].x, this.points[i].y);
             }
         }
-        ctx.closePath();
-        ctx.stroke();
-        ctx.fill();
+        path.closePath();
+        this.path = path;
+        ctx.stroke(path);
+        ctx.fill(path);
         ctx.beginPath();
+        // change it back to the previous state 
+        ctx.strokeStyle = lineColor;
+        ctx.lineWidth = lineWidth;
+        ctx.fillStyle = fillColor;
     }
 }
 export class Rhomboid extends Polygon {
@@ -111,17 +160,32 @@ export class Rhomboid extends Polygon {
     }
     override draw(ctx: CanvasRenderingContext2D) {
         ctx.globalCompositeOperation = 'source-over';
+        // save context current styling
+        let lineColor = ctx.strokeStyle;
+        let lineWidth = ctx.lineWidth;
+        let fillColor = ctx.fillStyle;
+        // change context styling to shape styling
+        ctx.strokeStyle = this.lineColor;
+        ctx.lineWidth = this.lineWidth;
+        ctx.fillStyle = this.fillColor;
+        // create path and save it for being used later
+        let path = new Path2D();
         if(this.points) {
-            ctx.moveTo(this.points[0].x, this.points[0].y);
-            ctx.lineTo(this.points[1].x, this.points[1].y);
-            ctx.lineTo(this.points[2].x, this.points[2].y);
-            ctx.lineTo(this.points[3].x, this.points[3].y);
-            ctx.lineTo(this.points[0].x, this.points[0].y);
-            ctx.closePath();
-            ctx.stroke();
-            ctx.fill();
+            path.moveTo(this.points[0].x, this.points[0].y);
+            path.lineTo(this.points[1].x, this.points[1].y);
+            path.lineTo(this.points[2].x, this.points[2].y);
+            path.lineTo(this.points[3].x, this.points[3].y);
+            path.lineTo(this.points[0].x, this.points[0].y);
+            path.closePath();
+            this.path = path;
+            ctx.stroke(path);
+            ctx.fill(path);
             ctx.beginPath();
         }
+        // change it back to the previous state 
+        ctx.strokeStyle = lineColor;
+        ctx.lineWidth = lineWidth;
+        ctx.fillStyle = fillColor;
     }
 }
 export class Rectangle extends Rhomboid {
@@ -130,14 +194,30 @@ export class Rectangle extends Rhomboid {
     }
     override draw(ctx: CanvasRenderingContext2D) {
         ctx.globalCompositeOperation = 'source-over';
+        // save context current styling
+        let lineColor = ctx.strokeStyle;
+        let lineWidth = ctx.lineWidth;
+        let fillColor = ctx.fillStyle;
+        // change context styling to shape styling
+        ctx.strokeStyle = this.lineColor;
+        ctx.lineWidth = this.lineWidth;
+        ctx.fillStyle = this.fillColor;
+        // create path and save it for being used later
+        let path = new Path2D();
         ctx.closePath();
         if(this.points) {
             let width = Math.abs(this.points[0].x - this.points[1].x);
             let height = Math.abs(this.points[0].y - this.points[1].y);
-            ctx.strokeRect(this.points[0].x, this.points[0].y, width, height);
-            ctx.fillRect(this.points[0].x, this.points[0].y, width, height);
+            path.rect(this.points[0].x, this.points[0].y, width, height);
+            this.path = path;
+            ctx.stroke(path);
+            ctx.fill(path);
         }
         ctx.beginPath();  
+        // change it back to the previous state 
+        ctx.strokeStyle = lineColor;
+        ctx.lineWidth = lineWidth;
+        ctx.fillStyle = fillColor;
     }
 }
 export class Trapezoid extends Rhomboid {
@@ -159,13 +239,28 @@ export class Ellipse extends ClosedShape {
     }
     override draw(ctx: CanvasRenderingContext2D) {
         ctx.globalCompositeOperation = 'source-over';
+        // save context current styling
+        let lineColor = ctx.strokeStyle;
+        let lineWidth = ctx.lineWidth;
+        let fillColor = ctx.fillStyle;
+        // change context styling to shape styling
+        ctx.strokeStyle = this.lineColor;
+        ctx.lineWidth = this.lineWidth;
+        ctx.fillStyle = this.fillColor;
+        // create path and save it for being used later
+        let path = new Path2D();
         if(this.center) {
-            ctx.ellipse(this.center.x, this.center.y, this.radiusX, this.radiusY, Math.PI, 0, 2 * Math.PI);
-            ctx.closePath();
-            ctx.stroke();
-            ctx.fill();
+            path.ellipse(this.center.x, this.center.y, this.radiusX, this.radiusY, Math.PI, 0, 2 * Math.PI);
+            path.closePath();
+            this.path = path;
+            ctx.stroke(path);
+            ctx.fill(path);
             ctx.beginPath();
-        }  
+        } 
+        // change it back to the previous state 
+        ctx.strokeStyle = lineColor;
+        ctx.lineWidth = lineWidth;
+        ctx.fillStyle = fillColor; 
     }
 }
 export class Circle extends ClosedShape {
@@ -180,13 +275,28 @@ export class Circle extends ClosedShape {
     }
     override draw(ctx: CanvasRenderingContext2D) {
         ctx.globalCompositeOperation = 'source-over';
+        // save context current styling
+        let lineColor = ctx.strokeStyle;
+        let lineWidth = ctx.lineWidth;
+        let fillColor = ctx.fillStyle;
+        // change context styling to shape styling
+        ctx.strokeStyle = this.lineColor;
+        ctx.lineWidth = this.lineWidth;
+        ctx.fillStyle = this.fillColor;
+        // create path and save it for being used later
+        let path = new Path2D();
         if(this.center) {
-            ctx.arc(this.center.x, this.center.y, this.radius, 0, Math.PI * 2);
-            ctx.closePath();
-            ctx.stroke();
-            ctx.fill();
+            path.arc(this.center.x, this.center.y, this.radius, 0, Math.PI * 2);
+            path.closePath();
+            this.path = path;
+            ctx.stroke(path);
+            ctx.fill(path);
             ctx.beginPath();
         }  
+        // change it back to the previous state 
+        ctx.strokeStyle = lineColor;
+        ctx.lineWidth = lineWidth;
+        ctx.fillStyle = fillColor; 
     }
 }
 export class Star extends ClosedShape {
@@ -200,31 +310,45 @@ export class Star extends ClosedShape {
         this.fillColor = fillColor;
     }
     override draw(ctx: CanvasRenderingContext2D) {
+        ctx.globalCompositeOperation = 'source-over';
+        // save context current styling
+        let lineColor = ctx.strokeStyle;
+        let lineWidth = ctx.lineWidth;
+        let fillColor = ctx.fillStyle;
+        // change context styling to shape styling
+        ctx.strokeStyle = this.lineColor;
+        ctx.lineWidth = this.lineWidth;
+        ctx.fillStyle = this.fillColor;
+        // create path and save it for being used later
+        let path = new Path2D();
         if(this.center) {
             var rot = Math.PI/2*3;
             let innerRadius = this.outerRadius*(2/3);
             var x = this.center.x; var y = this.center.y;
             var step = Math.PI/5;
-            ctx.globalCompositeOperation = 'source-over';
-            ctx.moveTo(this.center.x, this.center.y-this.outerRadius);
+            path.moveTo(this.center.x, this.center.y-this.outerRadius);
             for(var i=0; i<5; i++){
                 x = this.center.x + Math.cos(rot)*this.outerRadius;
                 y = this.center.y + Math.sin(rot)*this.outerRadius;
-                ctx.lineTo(x,y);
+                path.lineTo(x,y);
                 rot += step;
                 
                 x = this.center.x + Math.cos(rot)*innerRadius;
                 y = this.center.y + Math.sin(rot)*innerRadius;
-                ctx.lineTo(x,y);
+                path.lineTo(x,y);
                 rot += step;
             }
-            ctx.lineTo(this.center.x, this.center.y-this.outerRadius);
-            ctx.closePath();
-            ctx.stroke();
-            ctx.fill();
+            path.lineTo(this.center.x, this.center.y-this.outerRadius);
+            path.closePath();
+            this.path = path;
+            ctx.stroke(path);
+            ctx.fill(path);
             ctx.beginPath();
         }
-      
+        // change it back to the previous state 
+        ctx.strokeStyle = lineColor;
+        ctx.lineWidth = lineWidth;
+        ctx.fillStyle = fillColor; 
     }
 }
 export class Heart extends ClosedShape {
@@ -240,44 +364,59 @@ export class Heart extends ClosedShape {
         this.fillColor = fillColor;
     }
     override draw(ctx: CanvasRenderingContext2D) {
+        ctx.globalCompositeOperation = 'source-over';
+        // save context current styling
+        let lineColor = ctx.strokeStyle;
+        let lineWidth = ctx.lineWidth;
+        let fillColor = ctx.fillStyle;
+        // change context styling to shape styling
+        ctx.strokeStyle = this.lineColor;
+        ctx.lineWidth = this.lineWidth;
+        ctx.fillStyle = this.fillColor;
+        // create path and save it for being used later
+        let path = new Path2D();
         if(this.center) {
             var x = this.center.x;
             var y = this.center.y;
             var topCurveHeight = this.height * 0.3;
-            ctx.globalCompositeOperation = 'source-over';
-            ctx.moveTo(x, y + topCurveHeight);
+            path.moveTo(x, y + topCurveHeight);
             // top left curve
-            ctx.bezierCurveTo(
+            path.bezierCurveTo(
               x, y, 
               x - this.width / 2, y, 
               x - this.width / 2, y + topCurveHeight
             );
              
             // bottom left curve
-            ctx.bezierCurveTo(
+            path.bezierCurveTo(
               x - this.width / 2, y + (this.height + topCurveHeight) / 2, 
               x, y + (this.height + topCurveHeight) / 2, 
               x, y + this.height
             );
   
             // bottom right curve
-            ctx.bezierCurveTo(
+            path.bezierCurveTo(
               x, y + (this.height + topCurveHeight) / 2, 
               x + this.width / 2, y + (this.height + topCurveHeight) / 2, 
               x + this.width / 2, y + topCurveHeight
             );
     
             // top right curve
-            ctx.bezierCurveTo(
+            path.bezierCurveTo(
               x + this.width / 2, y, 
               x, y, 
               x, y + topCurveHeight
             );
 
-            ctx.closePath();
-            ctx.stroke();
-            ctx.fill();
+            path.closePath();
+            ctx.stroke(path);
+            this.path = path;
+            ctx.fill(path);
             ctx.beginPath();
         }
+        // change it back to the previous state 
+        ctx.strokeStyle = lineColor;
+        ctx.lineWidth = lineWidth;
+        ctx.fillStyle = fillColor; 
     }
 }

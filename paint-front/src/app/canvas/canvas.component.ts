@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import * as shapes from './shapes';
 
 @Component({
@@ -7,14 +7,14 @@ import * as shapes from './shapes';
   styleUrls: ['./canvas.component.css']
 })
 export class CanvasComponent implements OnInit {
-  grid_cnv: HTMLCanvasElement | null = null;
-  draw_cnv: HTMLCanvasElement | null = null;
+  grid_cnv!: HTMLCanvasElement;
+  draw_cnv!: HTMLCanvasElement;
+  draw_cnv_list!: HTMLCanvasElement[];
   line_width: number = 1.5;
   isDrawing: boolean = false;
-  isFilled: boolean = false;
   s: string = '';
   dash: number[] = [0, 5, 10, 15];
-  data!: shapes.Shape[];
+  data!: shapes.Shape[]; //
 
   @Input()
   set gridChange(gridChange: boolean) {
@@ -48,19 +48,23 @@ export class CanvasComponent implements OnInit {
       this.changeColor(colorChange);
   }
   @Input()
-  set colorFillChange(colorFillChange: string) {
-    if(this.isFilled)
-      this.changeColorFill(colorFillChange);
-    else
-      this.changeColorFill("transparent");
+  set colorFillChange(colorChange: { fillCheck: boolean; fillColor: string; }) {
+    if(colorChange) {
+      console.log(colorChange);
+      if(colorChange['fillCheck']) 
+        this.changeColorFill(colorChange['fillColor']); 
+      else
+        this.changeColorFill("transparent"); 
+    } 
   }
+  /* Drawing Tools */
   @Input()
-  set fillCheck(fillCheck: boolean) {
-    this.isFilled = fillCheck;
-    if(!this.isFilled) 
-      this.changeColorFill("transparent"); 
+  set selectEvent(selectEvent: Event) {
+    if(selectEvent) {
+      this.s = "Select";
+      this.draw();
+    }
   }
-  /* Tools */
   @Input()
   set panningEvent(panningEvent: Event) {
     if(panningEvent) {
@@ -181,15 +185,31 @@ export class CanvasComponent implements OnInit {
         this.s = 'Heart';
         this.draw();
       }
-  }    
+  } 
+  /* Nav bar */
+  @Input()
+  set createCanvasEvent(createCanvasEvent: Event) {
+    if(createCanvasEvent) {
+      let newPage = document.createElement("canvas");
+      this.draw_cnv_list.push(newPage);
+    }
+  }   
+  @Input()
+  set changeCanvasEvent(changeCanvas: number) {
+    if(changeCanvas) {
+      let parent = this.draw_cnv.parentElement;
+      parent?.replaceChild(this.draw_cnv_list[changeCanvas], this.draw_cnv);
+      this.draw_cnv = this.draw_cnv_list[changeCanvas];
+    }
+  }  
 
   constructor() { }
 
   ngOnInit(): void {
-    var cnv = document.getElementsByTagName("canvas");
-    this.draw_cnv = cnv[0];
-    this.grid_cnv = cnv[1];
-    var ctx = this.draw_cnv.getContext("2d");
+    this.draw_cnv_list = Array.from(document.getElementsByTagName("canvas"));
+    this.grid_cnv = this.draw_cnv_list[0];
+    this.draw_cnv = this.draw_cnv_list[1];
+    var ctx = this.draw_cnv?.getContext("2d");
     if(ctx) {
       ctx.lineWidth = 1.5;
       ctx.strokeStyle = "black";
@@ -337,28 +357,30 @@ export class CanvasComponent implements OnInit {
     let isDrawing = false;
     let Data = ''; 
     let x = 0; let y = 0;
+    var old: any = null;
     var dragStart: any;
     var dragEnd: any;
     var m = [1, 0, 0, 1, 0, 0];
     var state: any = [];//
-    var cnv: HTMLCanvasElement | null;
+    var cnv: HTMLCanvasElement;
     var ctx: any;
     var line_width: number | null = this.line_width;
-    var old:any = null;
-    cnv = document.getElementsByTagName("canvas")[0];
+    cnv = this.draw_cnv;
     ctx = cnv.getContext("2d");
     Data = ctx.getImageData(0, 0, cnv.width, cnv.height);
    
     cnv.addEventListener('mousedown', e => {
-      cnv = document.getElementsByTagName("canvas")[0];
+      cnv = this.draw_cnv;
       ctx = cnv.getContext("2d");
       Data = ctx.getImageData(0, 0,cnv.width, cnv.height); 
       x = e.offsetX;
       y = e.offsetY;
       isDrawing = true;
-      if(this.s === 'Erase') {
+      if(this.s==='Erase') {
         old = {x: e.offsetX, y: e.offsetY};
-      } else if(this.s === 'Pan') {
+      } else if(this.s==='Select') {
+
+      } else if(this.s==='Pan') {
         var cit = transformPoint(e.pageX, e.pageY);
         dragStart = {
           x: cit.x - cnv.offsetLeft,
@@ -368,7 +390,7 @@ export class CanvasComponent implements OnInit {
     });   
    
     cnv.addEventListener('mousemove', e => {
-      cnv = document.getElementsByTagName("canvas")[0];
+      cnv = this.draw_cnv;
       ctx = cnv.getContext("2d");
       if (isDrawing === true) {
         if(this.s===''||this.s==='Pencil') {
@@ -379,12 +401,14 @@ export class CanvasComponent implements OnInit {
           x = e.offsetX;
           y = e.offsetY;
           Erase(x, y);
+        } else if(this.s==='Select') {
+
         } else if(this.s==='Pan') {
           var cit = transformPoint(e.pageX, e.pageY);
           dragEnd = {
             x: cit.x - cnv.offsetLeft,
             y: cit.y - cnv.offsetTop
-          }
+          };
           Pan(dragStart, dragEnd);
           dragStart = dragEnd;
         } else {
@@ -394,12 +418,14 @@ export class CanvasComponent implements OnInit {
     });
    
     window.addEventListener('mouseup', e => {
-      cnv = document.getElementsByTagName("canvas")[0];
+      cnv = this.draw_cnv;
       ctx = cnv.getContext("2d");
       if (isDrawing === true) {
         if(this.s===''||this.s==='Pencil'){
           drawLine(x, y, e.offsetX, e.offsetY);
-        } else if (this.s==='Erase'||this.s==='Pan') {
+        } else if(this.s==='Erase'||this.s==='Pan') {
+        } else if(this.s==='Select') {
+
         } else{
           check(this.s, x, y, e.offsetX, e.offsetY);
         }
@@ -507,9 +533,9 @@ export class CanvasComponent implements OnInit {
     function addText(x1:any, y1:any, x2:any, y2:any) {
       let maxWidth = Math.abs(x1 - x2);
       var text = new shapes.Text("Text",
-                                 ctx.font,
                                  new shapes.Point(x1,y1),
                                  maxWidth,
+                                 ctx.font,
                                  ctx.strokeStyle,
                                  ctx.lineWidth);
       text.draw(ctx);

@@ -2,7 +2,7 @@
     <div>
         <div>
             <label id="logo">Draw & Paint</label>
-            <input type="text" id="file-name" class="item">
+            <input type="text" id="file-name" class="item" value="Unnamed_Document">
             <a href="" class="item">See file status</a> 
         </div>
         <div>
@@ -50,14 +50,13 @@
             <button class="menu-btn" type="button" value="help">Help</button> 
         </div>
     </div>
-    
 
     <div>
+        <button class="tool-btn" title="Resize">
+            <img src="../assets/tools/icons8-resize-48.png" width="24px" height="24px">
+        </button>
         <button class="tool-btn" title="Grid" (click)="grid()">
             <img src="../assets/tools/icons8-grid-48.png" width="24px" height="24px">
-        </button>
-        <button class="tool-btn" title="Select">
-            <img src="../assets/tools/icons8-select-48.png" width="24px" height="24px">
         </button>
         <button class="tool-btn" title="Delete">
             <img src="../assets/tools/icons8-delete-48.png" width="24px" height="24px">

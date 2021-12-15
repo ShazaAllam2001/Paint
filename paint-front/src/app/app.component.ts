@@ -10,11 +10,11 @@ export class AppComponent {
   
   gridChange!: boolean;
 
+  selectEvent!: Event;
   panningEvent!: Event;
   pencilEvent!: Event;
   eraseEvent!: Event;
   textEvent!: Event;
-
   lineEvent!: Event;
   triEvent!: Event;
   rhomboidEvent!: Event;
@@ -35,13 +35,18 @@ export class AppComponent {
   widthChange!: string;
   dashChange!: string;
   colorChange!: string;
-  colorFillChange!: string;
-  fillCheck!: boolean;
+  colorFillChange!: { fillCheck: boolean, fillColor: string };
+
+  createCanvas!: Event;
+  changeCanvas!: number;
 
   onChangeGrid(grid: any) {
     this.gridChange = grid;
   }
 
+  onChangeSelect(event: Event) {
+    this.selectEvent = event;
+  }
   onChangePan(event: Event) {
     this.panningEvent = event;
   }
@@ -54,7 +59,6 @@ export class AppComponent {
   onChangeText(event: Event) {
     this.textEvent = event;
   }
-
   onChangeLine(event: Event) {
     this.lineEvent = event;
   }
@@ -113,10 +117,14 @@ export class AppComponent {
   onChangeColor(color: any) {
     this.colorChange = color;
   }
-  onChangeColorFill(color: any) {
-    this.colorFillChange = color;
+  onChangeColorFill(fillChange: any) {
+    this.colorFillChange = fillChange;
   }
-  onCheckFill(fill: any) {
-    this.fillCheck = fill;
+
+  onCreateCanvas(event: Event) {
+    this.createCanvas = event;
+  }
+  onChangeCanvas(change: number) {
+    this.changeCanvas = change;
   }
 }

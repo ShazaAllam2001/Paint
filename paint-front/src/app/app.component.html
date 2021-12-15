@@ -3,7 +3,8 @@
   ></app-menu-bar>
 
   <div class="content">
-    <app-tool-box (panningAction)="onChangePan($event)"
+    <app-tool-box (selectAction)="onChangeSelect($event)"
+                  (panningAction)="onChangePan($event)"
                   (pencilDraw)="onChangePencil($event)"
                   (eraseAction)="onChangeErase($event)"
                   (textDraw)="onChangeText($event)"
@@ -24,6 +25,7 @@
     <div>
       <app-canvas [gridChange]="gridChange"
                   
+                  [selectEvent]="selectEvent"
                   [panningEvent]="panningEvent"
                   [pencilEvent]="pencilEvent"
                   [eraseEvent]="eraseEvent"
@@ -48,10 +50,14 @@
                   [widthChange]="widthChange"
                   [dashChange]="dashChange"
                   [colorChange]="colorChange"
-                  [colorFillChange]="colorFillChange"
-                  [fillCheck]="fillCheck"
+                  [colorFillChange]="colorFillChange" 
+                  
+                  [createCanvasEvent]="createCanvas"
+                  [changeCanvasEvent]="changeCanvas"
       ></app-canvas>
-      <app-nav-bar></app-nav-bar>
+      <app-nav-bar (createAction)="onCreateCanvas($event)"
+                   (changeAction)="onChangeCanvas($event)"
+      ></app-nav-bar>
     </div>
     <app-style-box (zoomInChange)="onChangeZoomIn($event)"
                    (zoomOutChange)="onChangeZoomOut($event)"
@@ -60,7 +66,6 @@
                    (dashChange)="onChangeDash($event)"
                    (colorChange)="onChangeColor($event)"
                    (colorFillChange)="onChangeColorFill($event)"
-                   (fillCheck)="onCheckFill($event)"
     ></app-style-box>
   </div>
 
