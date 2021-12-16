@@ -1,5 +1,9 @@
 <div id="app">
   <app-menu-bar (gridShow)="onChangeGrid($event)"
+                (resizeEvent)="onChangeSize($event)"
+                (deleteEvent)="onChangeDelete($event)"
+                (undoEvent)="onChangeUndo($event)"
+                (redoEvent)="onChangeRedo($event)"
   ></app-menu-bar>
 
   <div class="content">
@@ -24,6 +28,10 @@
     ></app-tool-box>
     <div>
       <app-canvas [gridChange]="gridChange"
+                  [sizeChange]="sizeChange"
+                  [deleteChange]="deleteChange"
+                  [undoChange]="undoChange"
+                  [redoChange]="redoChange"
                   
                   [selectEvent]="selectEvent"
                   [panningEvent]="panningEvent"

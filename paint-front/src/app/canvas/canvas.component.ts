@@ -1,3 +1,4 @@
+import { CONTEXT_NAME } from '@angular/compiler/src/render3/view/util';
 import { Component, Input, OnInit } from '@angular/core';
 import * as shapes from './shapes';
 
@@ -12,15 +13,68 @@ export class CanvasComponent implements OnInit {
   draw_cnv_list!: HTMLCanvasElement[];
   line_width: number = 1.5;
   isDrawing: boolean = false;
+  gridShown: boolean = true;
   s: string = '';
   dash: number[] = [0, 5, 10, 15];
-  data!: shapes.Shape[]; //
+  data!: shapes.Shape[]; // 
+  undoStack!: ImageData[]; //
+  redoStack!: ImageData[]; //
 
+  /* Menu bar Tools */
+  @Input()
+  set sizeChange(sizeChange: Event) {
+    if(sizeChange) {
+      this.draw_cnv.width = this.draw_cnv.width*1.1;
+      this.draw_cnv.height = this.draw_cnv.height*1.1;
+      var ctx = this.draw_cnv?.getContext("2d");
+      if(ctx) {
+        // draw canvas
+        for(let i=0; i<this.data.length; i++) 
+          this.data[i].draw(ctx);//
+      }
+      this.grid_cnv.width = this.grid_cnv.width*1.1;
+      this.grid_cnv.height = this.grid_cnv.height*1.1;
+      this.changeGrid(this.gridShown);
+    }
+  }
   @Input()
   set gridChange(gridChange: boolean) {
+    this.gridShown = gridChange;
     this.changeGrid(gridChange);
   }
-  /* Styling */
+  @Input()
+  set deleteChange(deleteChange: Event) {
+    var ctx = this.draw_cnv?.getContext("2d");
+    if(deleteChange && ctx) 
+      ctx.clearRect(0,0,this.draw_cnv.width,this.draw_cnv.height); 
+    this.data = [];
+  }
+  @Input()
+  set undoChange(undoChange: Event) {
+    var ctx = this.draw_cnv?.getContext("2d");
+    if(undoChange && ctx) {
+      console.log(undoChange);
+      var undoState = this.undoStack.pop();
+      if(undoState) {
+        this.redoStack.push(undoState);
+        ctx.putImageData(undoState,0,0);
+      }
+    }
+    this.data = []; //
+  }
+  @Input()
+  set redoChange(redoChange: Event) {
+    var ctx = this.draw_cnv?.getContext("2d");
+    if(redoChange && ctx) {
+      var redoState = this.redoStack.pop();
+      if(redoState) {
+        this.undoStack.push(redoState);
+        ctx.putImageData(redoState,0,0);
+      }
+    }
+    this.data = []; //
+  }
+  /* Styling Box */
   @Input()
   set zoomInChange(zoomInEvent: Event) {
     if(zoomInEvent) 
@@ -190,7 +244,14 @@ export class CanvasComponent implements OnInit {
   @Input()
   set createCanvasEvent(createCanvasEvent: Event) {
     if(createCanvasEvent) {
-      let newPage = document.createElement("canvas");
+      let newPage = this.draw_cnv.cloneNode() as HTMLCanvasElement;
+      var ctx = newPage?.getContext("2d");
+      if(ctx) {
+        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = "black";
+        ctx.fillStyle = "transparent";
+        ctx.font = "25px Arial";
+      }
       this.draw_cnv_list.push(newPage);
     }
   }   
@@ -216,7 +277,8 @@ export class CanvasComponent implements OnInit {
       ctx.fillStyle = "transparent";
       ctx.font = "25px Arial";
     }
-    this.data = [];
+    this.data = this.undoStack = this.redoStack = [];
+    this.gridShown = true;
     this.drawGrid();
     this.draw();
   }
@@ -303,10 +365,8 @@ export class CanvasComponent implements OnInit {
       ctx.setTransform(current_transform);
       ctx.scale(scale, scale);
       // draw canvas
-      for(let i=0; i<this.data.length; i++) {
+      for(let i=0; i<this.data.length; i++) 
         this.data[i].draw(ctx);//
-      }
-      ctx.setTransform(1,0,0,1,0,0);
       ctx.translate(0,0);
     }
   }
@@ -432,7 +492,9 @@ export class CanvasComponent implements OnInit {
         x = 0;
         y = 0;
         isDrawing = false;
-        this.data.push(state[state.length-1]); //
+        if(state[state.length-1])
+          this.data.push(state[state.length-1]); //
+        this.undoStack.push(ctx.getImageData(0, 0,cnv.width, cnv.height)); //
       }     
     });
 
@@ -670,7 +732,6 @@ export class CanvasComponent implements OnInit {
       heart.draw(ctx);
       state.push(heart);//
     }
-   
   } 
 
 }

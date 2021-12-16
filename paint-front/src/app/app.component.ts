@@ -8,7 +8,11 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'paint-front';
   
+  sizeChange!: Event;
   gridChange!: boolean;
+  deleteChange!: Event;
+  undoChange!: Event;
+  redoChange!: Event;
 
   selectEvent!: Event;
   panningEvent!: Event;
@@ -40,8 +44,20 @@ export class AppComponent {
   createCanvas!: Event;
   changeCanvas!: number;
 
+  onChangeSize(size: Event) {
+    this.sizeChange = size;
+  }
   onChangeGrid(grid: any) {
     this.gridChange = grid;
+  }
+  onChangeDelete(deleteEvent: Event) {
+    this.deleteChange = deleteEvent;
+  }
+  onChangeUndo(undoEvent: Event) {
+    this.undoChange = undoEvent;
+  }
+  onChangeRedo(redoEvent: Event) {
+    this.redoChange = redoEvent;
   }
 
   onChangeSelect(event: Event) {
