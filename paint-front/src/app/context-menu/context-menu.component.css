@@ -1,10 +1,11 @@
 #context-menu {
     font-family: var(--font);
-    position: fixed;
+    position: absolute;
     z-index: 100000;
     width: 125px;
     background: #808080;
     border-radius: 10px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
 }
 #context-menu .item {
     display: flex;

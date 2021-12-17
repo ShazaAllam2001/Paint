@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
   selector: 'app-context-menu',
@@ -6,6 +6,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./context-menu.component.css']
 })
 export class ContextMenuComponent implements OnInit {
+
+  @Input() x = 0;
+  @Input() y = 0;
 
   constructor() { }
 

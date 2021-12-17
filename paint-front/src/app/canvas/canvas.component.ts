@@ -1,4 +1,3 @@
-import { CONTEXT_NAME } from '@angular/compiler/src/render3/view/util';
 import { Component, Input, OnInit } from '@angular/core';
 import * as shapes from './shapes';
 
@@ -14,11 +13,15 @@ export class CanvasComponent implements OnInit {
   line_width: number = 1.5;
   isDrawing: boolean = false;
   gridShown: boolean = true;
+  contextmenu = false;
+  contextmenuX = 0;
+  contextmenuY = 0;
   s: string = '';
   dash: number[] = [0, 5, 10, 15];
-  data!: shapes.Shape[]; // 
-  undoStack!: ImageData[]; //
-  redoStack!: ImageData[]; //
+  data!: shapes.Shape[]; 
+  dataRedo!: shapes.Shape[]; 
+  undoStack!: ImageData[]; 
+  redoStack!: ImageData[]; 
 
   /* Menu bar Tools */
   @Input()
@@ -30,7 +33,7 @@ export class CanvasComponent implements OnInit {
       if(ctx) {
         // draw canvas
         for(let i=0; i<this.data.length; i++) 
-          this.data[i].draw(ctx);//
+          this.data[i].draw(ctx);
       }
       this.grid_cnv.width = this.grid_cnv.width*1.1;
       this.grid_cnv.height = this.grid_cnv.height*1.1;
@@ -60,7 +63,9 @@ export class CanvasComponent implements OnInit {
         ctx.putImageData(this.undoStack[this.undoStack.length-1],0,0);
       }
     }
-    this.data = []; //
+    let lastShape = this.data.pop(); //
+    if(lastShape)
+      this.dataRedo.push(lastShape);
   }
   @Input()
   set redoChange(redoChange: Event) {
@@ -72,7 +77,9 @@ export class CanvasComponent implements OnInit {
         ctx.putImageData(redoState,0,0);
       }
     }
-    this.data = []; //
+    let lastShape = this.dataRedo.pop(); //
+    if(lastShape)
+      this.data.push(lastShape);
   }
   /* Styling Box */
   @Input()
@@ -284,6 +291,19 @@ export class CanvasComponent implements OnInit {
     this.drawGrid();
     this.draw();
   }
+
+  //activates the menu with the coordinates
+  onrightClick(event: any){
+    event.preventDefault();
+    this.contextmenuX = event.offsetX;
+    this.contextmenuY = event.offsetY;
+    this.contextmenu = true;
+  }
+  //disables the menu
+  disableContextMenu(){
+    this.contextmenu= false;
+  }
+  
 
   drawGrid() {
     var ctx;
