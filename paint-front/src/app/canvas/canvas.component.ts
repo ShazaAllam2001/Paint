@@ -57,7 +57,7 @@ export class CanvasComponent implements OnInit {
       var undoState = this.undoStack.pop();
       if(undoState) {
         this.redoStack.push(undoState);
-        ctx.putImageData(undoState,0,0);
+        ctx.putImageData(this.undoStack[this.undoStack.length-1],0,0);
       }
     }
     this.data = []; //
@@ -276,8 +276,10 @@ export class CanvasComponent implements OnInit {
       ctx.strokeStyle = "black";
       ctx.fillStyle = "transparent";
       ctx.font = "25px Arial";
+      this.undoStack = [ctx.getImageData(0,0,this.draw_cnv.width,this.draw_cnv.height)];
     }
-    this.data = this.undoStack = this.redoStack = [];
+    this.data = [];
+    this.redoStack = [];
     this.gridShown = true;
     this.drawGrid();
     this.draw();
@@ -414,14 +416,12 @@ export class CanvasComponent implements OnInit {
   }
 
   draw(){
-    let isDrawing = false;
     let Data = ''; 
     let x = 0; let y = 0;
     var old: any = null;
     var dragStart: any;
     var dragEnd: any;
     var m = [1, 0, 0, 1, 0, 0];
-    var state: any = [];//
     var cnv: HTMLCanvasElement;
     var ctx: any;
     var line_width: number | null = this.line_width;
@@ -435,7 +435,7 @@ export class CanvasComponent implements OnInit {
       Data = ctx.getImageData(0, 0,cnv.width, cnv.height); 
       x = e.offsetX;
       y = e.offsetY;
-      isDrawing = true;
+      this.isDrawing = true;
       if(this.s==='Erase') {
         old = {x: e.offsetX, y: e.offsetY};
       } else if(this.s==='Select') {
@@ -452,7 +452,7 @@ export class CanvasComponent implements OnInit {
     cnv.addEventListener('mousemove', e => {
       cnv = this.draw_cnv;
       ctx = cnv.getContext("2d");
-      if (isDrawing === true) {
+      if (this.isDrawing === true) {
         if(this.s===''||this.s==='Pencil') {
           drawLine(x, y, e.offsetX, e.offsetY);
           x = e.offsetX;
@@ -477,61 +477,49 @@ export class CanvasComponent implements OnInit {
       }
     });
    
-    window.addEventListener('mouseup', e => {
+    cnv.addEventListener('mouseup', e => {
       cnv = this.draw_cnv;
       ctx = cnv.getContext("2d");
-      if (isDrawing === true) {
+      var shape: shapes.Shape | null = null;
+      if (this.isDrawing === true) {
         if(this.s===''||this.s==='Pencil'){
           drawLine(x, y, e.offsetX, e.offsetY);
         } else if(this.s==='Erase'||this.s==='Pan') {
         } else if(this.s==='Select') {
 
-        } else{
-          check(this.s, x, y, e.offsetX, e.offsetY);
+        } else {
+          shape = check(this.s, x, y, e.offsetX, e.offsetY);
         }
         x = 0;
         y = 0;
-        isDrawing = false;
-        if(state[state.length-1])
-          this.data.push(state[state.length-1]); //
+        this.isDrawing = false;
+        if(shape)
+          this.data.push(shape); //
         this.undoStack.push(ctx.getImageData(0, 0,cnv.width, cnv.height)); //
       }     
     });
 
-    function check (s:string, x1:any, y1:any, x2:any, y2:any){
-      if (isDrawing) {
+    const check =  (s:string, x1:any, y1:any, x2:any, y2:any) => {
+      if (this.isDrawing) {
         ctx.putImageData(Data, 0, 0);
       }
       switch(s){
-        case 'Text': addText(x1,y1,x2,y2);
-          break;
-        case 'Line': Line(x1,y1,x2,y2);
-          break; 
-        case 'Tri': Triangle(x1,y1,x2,y2);
-          break;
-        case 'Rhomboid': Rhomboid(x1,y1,x2,y2);
-          break; 
-        case 'Rect': Rectangle(x1,y1,x2,y2);
-          break;
-        case 'Trape': Trapezoid(x1,y1,x2,y2);
-          break;
-        case 'Rhombus': polygonal(x1,y1,x2,y2,4);
-          break;
-        case 'Pent': polygonal(x1,y1,x2,y2,5);
-          break;
-        case 'Hex': polygonal(x1,y1,x2,y2,6);
-          break; 
-        case 'Hept': polygonal(x1,y1,x2,y2,7);
-          break;  
-        case 'Circ': Circle(x1,y1,x2,y2);
-          break;   
-        case 'Elli': Ellipse(x1,y1,x2,y2);
-          break;  
-        case 'Star': Star(x1,y1,x2,y2);
-          break;  
-        case 'Heart': Heart(x1,y1,x2,y2);
-          break;    
+        case 'Text': return addText(x1,y1,x2,y2);
+        case 'Line': return Line(x1,y1,x2,y2); 
+        case 'Tri': return Triangle(x1,y1,x2,y2);
+        case 'Rhomboid': return Rhomboid(x1,y1,x2,y2); 
+        case 'Rect': return Rectangle(x1,y1,x2,y2);
+        case 'Trape': return Trapezoid(x1,y1,x2,y2);
+        case 'Rhombus': return polygonal(x1,y1,x2,y2,4);
+        case 'Pent': return polygonal(x1,y1,x2,y2,5);
+        case 'Hex': return polygonal(x1,y1,x2,y2,6); 
+        case 'Hept': return polygonal(x1,y1,x2,y2,7);  
+        case 'Circ': return Circle(x1,y1,x2,y2);   
+        case 'Elli': return Ellipse(x1,y1,x2,y2);  
+        case 'Star': return Star(x1,y1,x2,y2);  
+        case 'Heart': return Heart(x1,y1,x2,y2);    
       }
+      return null;
     }
 
     function transformPoint(px: any, py:any) {
@@ -601,7 +589,7 @@ export class CanvasComponent implements OnInit {
                                  ctx.strokeStyle,
                                  ctx.lineWidth);
       text.draw(ctx);
-      state.push(text);//
+      return text;
     }
 
     function Line(x1:any, y1:any, x2:any, y2:any) {
@@ -610,7 +598,7 @@ export class CanvasComponent implements OnInit {
                                         ctx.strokeStyle,
                                         ctx.lineWidth);
       line.draw(ctx);
-      state.push(line);//
+      return line;
     }
    
     function Triangle(x1:any, y1:any, x2:any, y2:any) {
@@ -623,7 +611,7 @@ export class CanvasComponent implements OnInit {
                                          ctx.lineWidth,
                                          ctx.fillStyle);
       triangle.draw(ctx);
-      state.push(triangle);//
+      return triangle;
     }
    
     function polygonal(x1:any, y1:any, x2:any, y2:any, n:any) {
@@ -639,7 +627,7 @@ export class CanvasComponent implements OnInit {
                                         ctx.lineWidth,
                                         ctx.fillStyle);
       polygonal.draw(ctx);
-      state.push(polygonal);//
+      return polygonal;
     }
    
     function Rhomboid (x1:any, y1:any, x2:any, y2:any) {
@@ -654,7 +642,7 @@ export class CanvasComponent implements OnInit {
                                         ctx.lineWidth,
                                         ctx.fillStyle);
       rhomboid.draw(ctx);
-      state.push(rhomboid);//
+      return rhomboid;
     }
 
     function Rectangle(x1:any, y1:any, x2:any, y2:any) {
@@ -668,7 +656,7 @@ export class CanvasComponent implements OnInit {
                                            ctx.lineWidth,
                                            ctx.fillStyle);
       rectangle.draw(ctx);
-      state.push(rectangle);//
+      return rectangle;
     }
 
     function Trapezoid(x1:any, y1:any, x2:any, y2:any) {
@@ -682,7 +670,7 @@ export class CanvasComponent implements OnInit {
                                            ctx.lineWidth,
                                            ctx.fillStyle);
       trapezoid.draw(ctx);
-      state.push(trapezoid);//
+      return trapezoid;
     }
    
     function Circle(x1:any ,y1:any, x2:any, y2:any) {
@@ -693,7 +681,7 @@ export class CanvasComponent implements OnInit {
                                          ctx.lineWidth,
                                          ctx.fillStyle);
       circle.draw(ctx);
-      state.push(circle);//
+      return circle;
     }
    
     function Ellipse(x1:any, y1:any, x2:any, y2:any) { 
@@ -706,7 +694,7 @@ export class CanvasComponent implements OnInit {
                                        ctx.lineWidth,
                                        ctx.fillStyle);
       ellipse.draw(ctx);
-      state.push(ellipse);//
+      return ellipse;
     }
 
     function Star(x1:any, y1:any, x2:any, y2:any) {
@@ -717,7 +705,7 @@ export class CanvasComponent implements OnInit {
                                  ctx.lineWidth,
                                  ctx.fillStyle); 
       star.draw(ctx);
-      state.push(star);//
+      return star;
     }
 
     function Heart(x1:any, y1:any, x2:any, y2:any) {
@@ -730,7 +718,7 @@ export class CanvasComponent implements OnInit {
                                    ctx.lineWidth,
                                    ctx.fillStyle); 
       heart.draw(ctx);
-      state.push(heart);//
+      return heart;
     }
   } 
 
