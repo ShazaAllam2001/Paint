@@ -1,4 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import * as shapes from './shapes';
 import * as drawing from './drawingShapes';
 import * as canvas from './canvasEdit';
@@ -24,7 +25,11 @@ export class CanvasComponent implements OnInit {
   data!: shapes.Shape[]; 
   dataRedo!: shapes.Shape[]; 
   // shapes data
-  
+  text!: shapes.Text[];
+  line!: shapes.LineSegment[];
+  polygon!: shapes.Polygon[];
+  closedShape!: shapes.ClosedShape[];
+  // undo & redo
   undoStack!: ImageData[]; 
   redoStack!: ImageData[]; 
 
@@ -274,7 +279,7 @@ export class CanvasComponent implements OnInit {
     }
   }  
 
-  constructor() { }
+  constructor(private http: HttpClient) { }
 
   ngOnInit(): void {
     this.draw_cnv_list = Array.from(document.getElementsByTagName("canvas"));
@@ -289,13 +294,12 @@ export class CanvasComponent implements OnInit {
       this.undoStack = [ctx.getImageData(0,0,this.draw_cnv.width,this.draw_cnv.height)];
     }
     this.redoStack = [];
-    this.data = [];
-    this.dataRedo = [];
+    this.data = []; this.dataRedo = [];
+    this.text = []; this.line = []; this.polygon = []; this.closedShape = [];
     this.gridShown = true;
     canvas.Edit.drawGrid(this.grid_cnv);
     this.draw();
   }
-
 
   storeWidth() {
     if(this.draw_cnv) {
@@ -321,24 +325,64 @@ export class CanvasComponent implements OnInit {
   }
   assignSelect(select: any) {
     this.select = { Type: select.Type, Shape: select.Shape };
-    this.checkSelect(this.select.Type, this.contextmenuX, this.contextmenuY);
+    if(this.s==='Select' && this.select.Type!=='' && this.select.Shape!==null) {
+      this.checkSelect(this.select.Type);
+    }
   }
-  checkSelect(s:string, x1:any, y1:any) {
+  checkSelect(s:string) {
     var ctx = this.draw_cnv.getContext("2d");
     
-    const Copy = (x1:any, y1:any) => {
+    const Copy = () => {
+      console.log(this.data,"before");
+      var offset = 50;
+      console.log(this.select.Shape);
       if(this.select.Shape && ctx) {
         ctx.clearRect(0, 0, this.draw_cnv.width, this.draw_cnv.height);
-        var shape = this.select.Shape;
-       
-        //shape.fillColor = String(ctx.strokeStyle);
-
-        this.data.push(shape);
+        let shape = this.select.Shape.clone();
+        if(this.select.Shape?.name==='Triangle'||
+                this.select.Shape?.name==='Rhomboid'||
+                this.select.Shape?.name==='Rectangle'||
+                this.select.Shape?.name==='Trapezoid'||
+                this.select.Shape?.name==='Polygonal4'||
+                this.select.Shape?.name==='Polygonal5'||
+                this.select.Shape?.name==='Polygonal6'||
+                this.select.Shape?.name==='Polygonal7') {
+          if(shape.points) {
+            for(let i=0; i<shape.points.length; i++) {
+              shape.points[i].x += offset; 
+              shape.points[i].y += offset; 
+            }
+          }
+          console.log("point",shape);
+        } else if(this.select.Shape instanceof shapes.ClosedShape) {
+          shape = this.select.Shape.clone();
+          if(shape.center) {
+            shape.center.x += offset; 
+            shape.center.y += offset; 
+          }
+        }/* else if(this.select.Shape instanceof shapes.LineSegment) {
+          shape = this.select.Shape.clone();
+          if(shape.point1 && shape.point2) {
+            shape.point1.x += offset; 
+            shape.point1.y += offset; 
+            shape.point2.x += offset; 
+            shape.point2.y += offset; 
+          }
+        } else if(this.select.Shape instanceof shapes.Text) {
+          shape = this.select.Shape.clone();
+          if(shape.bottomLeft) {
+            shape.bottomLeft.x += offset; 
+            shape.bottomLeft.y += offset; 
+          }
+        }*/
+        console.log(shape);
+        if(shape)
+          this.data.push(shape);
+          console.log(this.data,"after");
         // draw canvas
         for(let i=0; i<this.data.length; i++) 
           this.data[i].draw(ctx);//
       }
-      
     }
     const Delete = () => {
       if(this.select.Shape && ctx) {
@@ -371,7 +415,7 @@ export class CanvasComponent implements OnInit {
         });
         ctx.clearRect(0, 0, this.draw_cnv.width, this.draw_cnv.height);
         var shape = this.select.Shape as shapes.ClosedShape;
-        shape.fillColor = String(ctx.strokeStyle);
+        shape.fillColor = String(ctx.fillStyle);
         this.data.push(shape);
         // draw canvas
         for(let i=0; i<this.data.length; i++) 
@@ -380,7 +424,7 @@ export class CanvasComponent implements OnInit {
     }
 
     switch(s){
-      case 'Copy': Copy(x1,y1); break; 
+      case 'Copy': Copy(); break; 
       case 'Delete':  Delete(); break;
       case 'Line color': LineColor(); break;
       case 'Fill color': FillColor(); break;  
@@ -425,7 +469,7 @@ export class CanvasComponent implements OnInit {
       ctx = cnv.getContext("2d");
       if (this.isDrawing === true) {
         if(this.s===''||this.s==='Pencil') {
-          drawing.draw.Line(ctx, x, y, e.offsetX, e.offsetY);
+          drawing.draw.Line(this.http, ctx, x, y, e.offsetX, e.offsetY);
           x = e.offsetX;
           y = e.offsetY;
         } else if(this.s==='Erase') {
@@ -455,7 +499,7 @@ export class CanvasComponent implements OnInit {
       var shape: shapes.Shape | null = null;
       if (this.isDrawing === true) {
         if(this.s===''||this.s==='Pencil'){
-          drawing.draw.Line(ctx, x, y, e.offsetX, e.offsetY);
+          drawing.draw.Line(this.http, ctx, x, y, e.offsetX, e.offsetY);
         } else if(this.s==='Erase'||this.s==='Pan') {
         } else if(this.s==='Select' && this.select.Type!=='' && this.select.Shape!==null) {
           checkSelectMove(this.select.Type, x, y, e.offsetX, e.offsetY);
@@ -484,12 +528,38 @@ export class CanvasComponent implements OnInit {
     }
     
     const Move = (x1:any, y1:any, x2:any, y2:any) => {
-      let moveDistance = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
-      if(this.select.Shape) {
-        if(this.select.Shape instanceof shapes.Circle) {
-           console.log("circle");
+      let offset = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+      if(this.select.Shape && ctx) {
+        ctx.clearRect(0, 0, this.draw_cnv.width, this.draw_cnv.height);
+        if(this.select.Shape instanceof shapes.Polygon) {
+          if(this.select.Shape.points) {
+            for(let i=0; i<this.select.Shape.points.length; i++) {
+              this.select.Shape.points[i].x += offset; 
+              this.select.Shape.points[i].y += offset; 
+            }
+          }
+        } else if(this.select.Shape instanceof shapes.ClosedShape) {
+          if(this.select.Shape.center) {
+            this.select.Shape.center.x += offset; 
+            this.select.Shape.center.y += offset; 
+          }
+        } else if(this.select.Shape instanceof shapes.LineSegment) {
+          if(this.select.Shape.point1 && this.select.Shape.point2) {
+            this.select.Shape.point1.x += offset; 
+            this.select.Shape.point1.y += offset; 
+            this.select.Shape.point2.x += offset; 
+            this.select.Shape.point2.y += offset; 
+          }
+        } else if(this.select.Shape instanceof shapes.Text) {
+          if(this.select.Shape.bottomLeft) {
+            this.select.Shape.bottomLeft.x += offset; 
+            this.select.Shape.bottomLeft.y += offset; 
+          }
         }
-
+        this.data.push(this.select.Shape);
+        // draw canvas
+        for(let i=0; i<this.data.length; i++) 
+          this.data[i].draw(ctx);//
       }
     }
     const Resize = (x1:any, y1:any, x2:any, y2:any) => {
@@ -497,25 +567,53 @@ export class CanvasComponent implements OnInit {
     }
   
 
-    const checkDraw =  (shape:string, x1:any, y1:any, x2:any, y2:any) => {
+    const checkDraw =  (s:string, x1:any, y1:any, x2:any, y2:any) => {
       if (this.isDrawing) {
         ctx.putImageData(Data, 0, 0);
       }
-      switch(shape){
-        case 'Text': return drawing.draw.addText(ctx,x1,y1,x2,y2);
-        case 'Line': return drawing.draw.Line(ctx,x1,y1,x2,y2); 
-        case 'Tri': return drawing.draw.Triangle(ctx,x1,y1,x2,y2);
-        case 'Rhomboid': return drawing.draw.Rhomboid(ctx,x1,y1,x2,y2); 
-        case 'Rect': return drawing.draw.Rectangle(ctx,x1,y1,x2,y2);
-        case 'Trape': return drawing.draw.Trapezoid(ctx,x1,y1,x2,y2);
-        case 'Rhombus': return drawing.draw.Polygonal(ctx,x1,y1,x2,y2,4);
-        case 'Pent': return drawing.draw.Polygonal(ctx,x1,y1,x2,y2,5);
-        case 'Hex': return drawing.draw.Polygonal(ctx,x1,y1,x2,y2,6); 
-        case 'Hept': return drawing.draw.Polygonal(ctx,x1,y1,x2,y2,7);  
-        case 'Circ': return drawing.draw.Circle(ctx,x1,y1,x2,y2);   
-        case 'Elli': return drawing.draw.Ellipse(ctx,x1,y1,x2,y2);  
-        case 'Star': return drawing.draw.Star(ctx,x1,y1,x2,y2);  
-        case 'Heart': return drawing.draw.Heart(ctx,x1,y1,x2,y2);    
+      switch(s){
+        case 'Text': var text = drawing.draw.addText(this.http,ctx,x1,y1,x2,y2);
+                     this.text.push(text);
+        return text;
+        case 'Line': var line = drawing.draw.Line(this.http,ctx,x1,y1,x2,y2);
+                     this.line.push(line);
+        return line; 
+        case 'Tri': var triangle = drawing.draw.Triangle(this.http,ctx,x1,y1,x2,y2);
+                    this.polygon.push(triangle);
+        return triangle;
+        case 'Rhomboid': var rhomboid = drawing.draw.Rhomboid(this.http,ctx,x1,y1,x2,y2);
+                         this.polygon.push(rhomboid);
+        return rhomboid; 
+        case 'Rect': var rectangle = drawing.draw.Rectangle(this.http,ctx,x1,y1,x2,y2);
+                     this.polygon.push(rectangle);
+        return rectangle; 
+        case 'Trape': var trapezoid = drawing.draw.Trapezoid(this.http,ctx,x1,y1,x2,y2);
+                      this.polygon.push(trapezoid);
+        return trapezoid;
+        case 'Rhombus': var rhombous = drawing.draw.Polygonal(this.http,ctx,x1,y1,x2,y2,4);
+                        this.polygon.push(rhombous);
+        return rhombous;
+        case 'Pent': var pentagon = drawing.draw.Polygonal(this.http,ctx,x1,y1,x2,y2,5);
+                     this.polygon.push(pentagon);
+        return pentagon;
+        case 'Hex': var hexagon = drawing.draw.Polygonal(this.http,ctx,x1,y1,x2,y2,6);
+                    this.polygon.push(hexagon);
+        return hexagon; 
+        case 'Hept': var heptagon = drawing.draw.Polygonal(this.http,ctx,x1,y1,x2,y2,7);
+                     this.polygon.push(heptagon);
+        return heptagon; 
+        case 'Circ': var circle = drawing.draw.Circle(this.http,ctx,x1,y1,x2,y2); 
+                     this.closedShape.push(circle);
+        return circle;   
+        case 'Elli': var ellipse = drawing.draw.Ellipse(this.http,ctx,x1,y1,x2,y2);  
+                     this.closedShape.push(ellipse);
+        return ellipse;
+        case 'Star': var star = drawing.draw.Star(this.http,ctx,x1,y1,x2,y2);  
+                     this.closedShape.push(star);
+        return star;  
+        case 'Heart': var heart = drawing.draw.Heart(this.http,ctx,x1,y1,x2,y2);  
+                      this.closedShape.push(heart);
+        return heart;   
       }
       return null;
     }

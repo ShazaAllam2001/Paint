@@ -1,15 +1,10 @@
 package oop.paintback.services;
+
 import oop.paintback.database.RunningData;
 import oop.paintback.database.Selector;
 import oop.paintback.database.LoadingData;
 import oop.paintback.model.*;
-import oop.paintback.model.closedShapes.Ellipse.Circle;
-import oop.paintback.model.closedShapes.Ellipse.Ellipse;
-import oop.paintback.model.closedShapes.Polygons.Rhomboid.Rectangle;
-import oop.paintback.model.closedShapes.Polygons.Triangle;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
 import java.util.Stack;
 
 public class MainMethodsServices {
@@ -31,18 +26,8 @@ public class MainMethodsServices {
             data.renewData(temp);
             return help.sendToFront(temp);
         }else if(data.getUndoStack().size() == 1) {
-        	data.getRedoStack().add(data.getUndoStack().pop());
-            data.setLines(new ArrayList<LineSegment>());
-        	data.setRectangles(new ArrayList<Rectangle>());
-        	data.setSquares(new ArrayList<Square>());
-        	data.setCircles(new ArrayList<Circle>());
-        	data.setEllipses(new ArrayList<Ellipse>());
-        	data.setTriangles(new ArrayList<Triangle>());
-
-
         	data.setShapesStack(new Stack<String>());
         	data.renewData(new LoadingData());
-        	LoadingData d = new LoadingData(data);
         	return help.sendToFront( new LoadingData(data));
         }
         return null;

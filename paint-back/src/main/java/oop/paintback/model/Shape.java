@@ -7,23 +7,23 @@ import org.json.JSONObject;
 import java.io.*;
 
 public abstract class Shape implements Cloneable {
-    protected String outlineColor;
+    protected String lineColor;
     protected String id;
 
-    public String getOutlineColor() { return outlineColor; }
+    public String getOutlineColor() { return lineColor; }
     public String getId() { return id; }
 
-    public void setOutlineColor(String color) { this.outlineColor = color; }
+    public void setOutlineColor(String color) { this.lineColor = color; }
     public void setId(String id) { this.id = id; }
 
-    public abstract void copy(double selectedX, double selectedY, double pointX, double pointY, int index, RunningData data);
-    public abstract void move( double selectedX, double selectedY, double pointX, double pointY, int index, RunningData data);
+    public abstract void copy(double selectedX, double selectedY, double pointX, double pointY, int index,RunningData data);
+    public abstract void move( double selectedX , double selectedY, double pointX , double pointY ,int index , RunningData data);
     public abstract void addNewShape(String jsonString, RunningData data);
     public abstract void delete (int index, RunningData data);
-    public abstract void resize(int index, RunningData data, double scalar);
-    public abstract org.json.JSONObject dataToString (LoadingData data,int index);
+    public abstract void resize(int index,RunningData data,double scalar);
+    public abstract org.json.simple.JSONObject dataToString (LoadingData data,int index);
     public abstract void print (RunningData data);
-    public abstract boolean CheckIn(double pointx, double pointy, Object shape);
+    public abstract boolean CheckIn(double pointx,double pointy,Object shape);
 
     public void save(String jsonString){
         JSONArray jsonArray=new JSONArray(jsonString);
@@ -70,6 +70,5 @@ public abstract class Shape implements Cloneable {
         }
         return clone;
     }
-
 }
 

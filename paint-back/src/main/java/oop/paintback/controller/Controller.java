@@ -1,13 +1,11 @@
 package oop.paintback.controller;
-import com.eg.edu.alexu.csd.oop.draw.cs.drawing.services.HelpMethods;
-import com.eg.edu.alexu.csd.oop.draw.cs.drawing.services.MainMethodsServices;
+import oop.paintback.services.HelpMethods;
+import oop.paintback.services.MainMethodsServices;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.web.bind.annotation.*;
 
-
-
-@CrossOrigin
+@CrossOrigin()
 @RestController
 public class Controller {
     MainMethodsServices serve = new MainMethodsServices();

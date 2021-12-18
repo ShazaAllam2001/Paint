@@ -6,34 +6,65 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import java.awt.*;
 
-public class LineSegment extends Shape {
+public class LineSegment extends Shape{
     private static LineSegment instance;
-    protected Point point1;
-    protected Point point2;
+    private double startPointX, startPointY, endPointX, endPointY;
 
     public LineSegment() { }
-    public LineSegment(Point point1, Point point2, String outlineColor, String id) {
-        this.point1 = point1;
-        this.point2 = point2;
-        this.outlineColor = outlineColor;
+    public LineSegment(double startPointX, double startPointY, double endPointX, double endPointY, String lineColor, String id) {
+        this.startPointX = startPointX;
+        this.startPointY = startPointY;
+        this.endPointX = endPointX;
+        this.endPointY = endPointY;
+        this.lineColor = lineColor;
         this.id = id;
     }
 
-    public Point getPoint1() { return point1; }
-    public Point getPoint2() { return point2; }
+    public double getStartPointX() {
+        return startPointX;
+    }
+    public double getStartPointY() {
+        return startPointY;
+    }
+    public double getEndPointX() {
+        return endPointX;
+    }
+    public double getEndPointY() {
+        return endPointY;
+    }
 
-    public void setPoint1(Point point1) { this.point1 = point1; }
-    public void setPoint2(Point point2) { this.point2 = point2; }
+    public void setStartPointX(double startPointX) {
+        this.startPointX = startPointX;
+    }
+    public void setStartPointY(double startPointY) {
+        this.startPointY = startPointY;
+    }
+    public void setEndPointX(double endPointX) {
+        this.endPointX = endPointX;
+    }
+    public void setEndPointY(double endPointY) {
+        this.endPointY = endPointY;
+    }
+
+    public static LineSegment getInstance() {
+        if (instance == null) {
+            synchronized (LineSegment.class) {
+                if (instance == null)
+                    instance = new LineSegment();
+            }
+        }
+        return instance;
+    }
 
     @Override
-    public void copy(Point selected, Point point, int index, RunningData data) {
-        double differenceX = point.x - selected.x, differenceY = point.y - selected.y;
-        LineSegment temp;
+    public void copy(double selectedX, double selectedY, double pointX, double pointY, int index, RunningData data) {
+        double differenceX = pointX - selectedX, differenceY = pointY - selectedY;
+        LineSegment temp = new LineSegment();
         temp = (LineSegment) data.getLines().get(index).clone();
-        temp.startPoint.x += differenceX;
-        temp.startPoint.x += differenceY;
-        temp.endPoint.x += differenceX;
-        temp.endPoint.y += differenceY;
+        temp.startPointX += differenceX;
+        temp.startPointY += differenceY;
+        temp.endPointX += differenceX;
+        temp.endPointY += differenceY;
         temp.setId(Integer.parseInt(data.getShapesStack().peek())+1+"");
         data.getLines().add(temp);
     }
@@ -101,14 +132,14 @@ public class LineSegment extends Shape {
 
     @SuppressWarnings("unchecked")
     @Override
-    public org.json.JSONObject dataToString(LoadingData data, int index) {
-        org.json.simple.JSONObject jsonObject = new org.json.JSONObject();
+    public org.json.simple.JSONObject dataToString(LoadingData data, int index) {
+        org.json.simple.JSONObject jsonObject = new org.json.simple.JSONObject();
         jsonObject.put("name", "LineSegment");
         jsonObject.put("startPointX", data.getLines().get(index).getStartPointX());
         jsonObject.put("startPointY", data.getLines().get(index).getStartPointY());
         jsonObject.put("endPointX", data.getLines().get(index).getEndPointX());
         jsonObject.put("endPointY", data.getLines().get(index).getEndPointY());
-        jsonObject.put("color", data.getLines().get(index).getColor());
+        jsonObject.put("color", data.getLines().get(index).getOutlineColor());
         jsonObject.put("id", data.getLines().get(index).getId());
         return jsonObject;
     }

@@ -9,25 +9,68 @@ import java.io.IOException;
 
 public class Triangle extends Polygon {
     private static Triangle instance;
+    private double point1X, point1Y, point2X, point2Y, point3X, point3Y;
 
-    public Triangle() { }
-    public Triangle(Point[] points, Point center, String outLineColor, String fillColor) throws IOException {
-        if(points.length == 3) {
-            this.points = points;
-            this.center = center;
-            this.outlineColor = outLineColor;
-            this.fillColor = fillColor;
-        } else {
-         throw new IOException("The input Points array size is not compatible with type: Triangle");
-        }
+    public Triangle() {
     }
 
-    public void setPoints(Point[] points) throws IOException{
-        if(points.length == 3) {
-            this.points = points;
-        } else {
-            throw new IOException("The input Points array size is not compatible with type: Triangle");
-        }
+    public Triangle(double point1X, double point1Y, double point2X, double point2Y, double point3X, double point3Y, String color,String id) {
+        this.point1X = point1X;
+        this.point1Y = point1Y;
+        this.point2X = point2X;
+        this.point2Y = point2Y;
+        this.point3X = point3X;
+        this.point3Y = point3Y;
+        this.lineColor = color;
+        this.id = id;
+    }
+
+    public double getPoint1X() {
+        return point1X;
+    }
+
+    public double getPoint1Y() {
+        return point1Y;
+    }
+
+    public double getPoint2X() {
+        return point2X;
+    }
+
+    public double getPoint2Y() {
+        return point2Y;
+    }
+
+    public double getPoint3X() {
+        return point3X;
+    }
+
+    public double getPoint3Y() {
+        return point3Y;
+    }
+
+    public void setPoint1X(double point1X) {
+        this.point1X = point1X;
+    }
+
+    public void setPoint1Y(double point1Y) {
+        this.point1Y = point1Y;
+    }
+
+    public void setPoint2X(double point2X) {
+        this.point2X = point2X;
+    }
+
+    public void setPoint2Y(double point2Y) {
+        this.point2Y = point2Y;
+    }
+
+    public void setPoint3X(double point3X) {
+        this.point3X = point3X;
+    }
+
+    public void setPoint3Y(double point3Y) {
+        this.point3Y = point3Y;
     }
 
     public static Triangle getInstance() {
@@ -45,15 +88,15 @@ public class Triangle extends Polygon {
     }
 
     @Override
-    public void copy(Point selected, Point point, int index, RunningData data) {
+    public void copy(double selectedX, double selectedY, double pointX, double pointY, int index, RunningData data) {
         Triangle t = new Triangle();
         t = (Triangle) data.getTriangles().get(index).clone();
-        double differenceX = point.x - selected.x;
-        double differenceY = point.y - selected.y;
-        t.points[0].x = t.points[0].x + differenceX;
-        t.points[0].y = t.points[0].y + differenceY;
-        t.points[1].x = t.points[1].x + differenceX;
-        t.points[1].y = t.points[1].y + differenceY;
+        double differenceX = pointX - selectedX;
+        double differenceY = pointY - selectedY;
+        t.point1X = t.point1X + differenceX;
+        t.point1Y = t.point1Y + differenceY;
+        t.point2X = t.point2X + differenceX;
+        t.point2Y = t.point2Y + differenceY;
         t.point3X = t.point3X + differenceX;
         t.point3Y = t.point3Y + differenceY;
         t.setId(Integer.parseInt(data.getShapesStack().peek())+1+"");
@@ -109,7 +152,6 @@ public class Triangle extends Polygon {
             System.out.print(data.getTriangles().get(i).getPoint1Y() + "\t");
             System.out.print(data.getTriangles().get(i).getPoint2X() + "\t");
             System.out.print(data.getTriangles().get(i).getPoint2Y() + "\t");
-            System.out.print(data.getTriangles().get(i).getPoint2Y() + "\t");
             System.out.print(data.getTriangles().get(i).getPoint3X() + "\t");
             System.out.print(data.getTriangles().get(i).getPoint3Y() + "\n");
         }
@@ -124,14 +166,6 @@ public class Triangle extends Polygon {
                 tr.point1Y, tr.point2X, tr.point2Y, tr.point3X, tr.point3Y));
     }
 
-    public String getColor() {
-        return color;
-    }
-
-    public void setColor(String color) {
-        this.color = color;
-    }
-
     @SuppressWarnings("unchecked")
     @Override
     public org.json.simple.JSONObject dataToString(LoadingData data, int index) {
@@ -143,9 +177,10 @@ public class Triangle extends Polygon {
         jsonObject.put("point2Y",data.getTriangles().get(index).getPoint2Y());
         jsonObject.put("point3X",data.getTriangles().get(index).getPoint3X());
         jsonObject.put("point3Y",data.getTriangles().get(index).getPoint3Y());
-        jsonObject.put("color",data.getTriangles().get(index).getColor());
+        jsonObject.put("color",data.getTriangles().get(index).getOutlineColor());
         jsonObject.put("id", data.getTriangles().get(index).getId());
         return jsonObject;
     }
+
 
 }

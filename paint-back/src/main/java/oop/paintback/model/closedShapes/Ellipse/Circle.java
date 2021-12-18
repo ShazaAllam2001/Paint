@@ -8,21 +8,22 @@ import java.awt.*;
 
 public class Circle extends Ellipse {
     private static Circle instance;
+    private double radius;
 
     public Circle() { }
-    public Circle(Point center, double radius, String outlineColor, String fillColor) {
-        super(center, radius, radius, outlineColor, fillColor);
+    public Circle(double centerX,double centerY,double radius,String color,String id){
+        this.centerX = centerX;
+        this.centerY = centerY;
+        this.radius = radius;
+        this.lineColor=color;
+        this.id = id;
     }
 
-    @Override
-    public void setRadiusX(double radius) {
-        super.setRadiusX(radius);
-        super.setRadiusY(radius);
+    public double getRadius() {
+        return radius;
     }
-    @Override
-    public void setRadiusY(double radius) {
-        super.setRadiusX(radius);
-        super.setRadiusY(radius);
+    public void setRadius(double radius){
+        this.radius=radius;
     }
 
     @Override
@@ -30,8 +31,8 @@ public class Circle extends Ellipse {
         double differenceX=pointX-selectedX,differenceY=pointY-selectedY;
         Circle temp = new Circle();
         temp = (Circle) data.getCircles().get(index).clone();
-        temp.center.x+=differenceX;
-        temp.center.y+=differenceY;
+        temp.centerX+=differenceX;
+        temp.centerY+=differenceY;
         temp.setId(Integer.parseInt(data.getShapesStack().peek())+1+"");
         data.getCircles().add(temp);
     }
@@ -40,13 +41,14 @@ public class Circle extends Ellipse {
     public void move(double selectedX, double selectedY, double pointX, double pointY, int index, RunningData data) {
         double differenceX=pointX-selectedX,differenceY=pointY-selectedY;
         Circle temp = data.getCircles().get(index);
-        temp.setCenter(temp.getCenter().x+differenceX, temp.getCenter().x+differenceY);
+        temp.setCenterX(temp.getCenterX()+differenceX);
+        temp.setCenterY(temp.getCenterY()+differenceY);
         temp.setId(Integer.parseInt(data.getShapesStack().peek())+1+"");
     }
 
     @Override
     public void addNewShape(String jsonString, RunningData data) {
-        JSONObject jsonObject = new JSONObject(jsonString);
+        JSONObject jsonObject=new JSONObject(jsonString);
         Circle circle=new Circle(jsonObject.getDouble("centerX"),jsonObject.getDouble("centerY"),jsonObject.getDouble("radius"),jsonObject.getString("color"),jsonObject.getString("id"));
         data.getCircles().add(circle);
     }
@@ -65,8 +67,8 @@ public class Circle extends Ellipse {
     @Override
     public void print(RunningData data) {
         for(int i=0;i<data.getCircles().size();i++){
-            System.out.print(data.getCircles().get(i).getCenter().x+"\t");
-            System.out.print(data.getCircles().get(i).getCenter().y+"\t");
+            System.out.print(data.getCircles().get(i).getCenterX()+"\t");
+            System.out.print(data.getCircles().get(i).getCenterY()+"\t");
             System.out.print(data.getCircles().get(i).getRadius()+"\n");
         }
     }
@@ -85,12 +87,7 @@ public class Circle extends Ellipse {
         return !(Math.sqrt(Math.pow(pointx - ((Circle) shape).getCenterX(), 2)
                 + Math.pow(pointy - ((Circle) shape).getCenterY(), 2)) > (((Circle) shape).getRadius() + 1.5));
     }
-    public String getColor() {
-        return color;
-    }
-    public void setColor(String color) {
-        this.color = color;
-    }
+
     @SuppressWarnings("unchecked")
     @Override
     public org.json.simple.JSONObject dataToString(LoadingData data, int index) {
@@ -99,7 +96,7 @@ public class Circle extends Ellipse {
         jsonObject.put("centerX",data.getCircles().get(index).getCenterX());
         jsonObject.put("centerY",data.getCircles().get(index).getCenterY());
         jsonObject.put("radius",data.getCircles().get(index).getRadius());
-        jsonObject.put("color",data.getCircles().get(index).getColor());
+        jsonObject.put("color",data.getCircles().get(index).getOutlineColor());
         jsonObject.put("id",data.getCircles().get(index).getId());
         return jsonObject;
     }

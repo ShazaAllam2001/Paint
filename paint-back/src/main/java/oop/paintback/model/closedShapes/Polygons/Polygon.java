@@ -9,5 +9,5 @@ public abstract class Polygon extends closedShape {
 
     public Point[] getPoints() { return this.points; }
 
-    public abstract void setPoints(Point[] points) throws IOException;
+    //public abstract void setPoints(Point[] points) throws IOException;
 }

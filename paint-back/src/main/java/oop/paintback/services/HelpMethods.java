@@ -5,7 +5,7 @@ import oop.paintback.database.RunningData;
 import oop.paintback.database.Selector;
 import oop.paintback.model.Shape;
 import org.json.JSONObject;
-import org.json.JSONArray;
+import org.json.simple.JSONArray;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -209,15 +209,106 @@ public class HelpMethods {
                     id = null;
                 }
             }
-            if (data.getSquares() != null) {
-                for (int i = 0; i < data.getSquares().size(); i++) {
-                    if (data.getSquares().get(i).CheckIn(x, y, data.getSquares().get(i))) {
+            if (data.getRhomboids() != null) {
+                for (int i = 0; i < data.getRhomboids().size(); i++) {
+                    if (data.getRhomboids().get(i).CheckIn(x, y, data.getRhomboids().get(i))) {
                         index = i;
-                        id = data.getSquares().get(i).getId();
+                        id = data.getRhomboids().get(i).getId();
                     }
                 }
                 if (index != -1) {
-                    selectedShapes.add(new Selector("Square",id, index));
+                    selectedShapes.add(new Selector("Rhomboid",id, index));
+                    index = -1;
+                    id = null;
+                }
+            }
+            if (data.getRhombous() != null) {
+                for (int i = 0; i < data.getRhombous().size(); i++) {
+                    if (data.getRhomboids().get(i).CheckIn(x, y, data.getRhombous().get(i))) {
+                        index = i;
+                        id = data.getRhombous().get(i).getId();
+                    }
+                }
+                if (index != -1) {
+                    selectedShapes.add(new Selector("Rhombous",id, index));
+                    index = -1;
+                    id = null;
+                }
+            }
+            if (data.getTrapezoids() != null) {
+                for (int i = 0; i < data.getTrapezoids().size(); i++) {
+                    if (data.getTrapezoids().get(i).CheckIn(x, y, data.getTrapezoids().get(i))) {
+                        index = i;
+                        id = data.getTrapezoids().get(i).getId();
+                    }
+                }
+                if (index != -1) {
+                    selectedShapes.add(new Selector("Trapezoid",id, index));
+                    index = -1;
+                    id = null;
+                }
+            }
+            if (data.getHeptagons() != null) {
+                for (int i = 0; i < data.getHeptagons().size(); i++) {
+                    if (data.getHeptagons().get(i).CheckIn(x, y, data.getHeptagons().get(i))) {
+                        index = i;
+                        id = data.getHeptagons().get(i).getId();
+                    }
+                }
+                if (index != -1) {
+                    selectedShapes.add(new Selector("Heptagon",id, index));
+                    index = -1;
+                    id = null;
+                }
+            }
+            if (data.getHexagons() != null) {
+                for (int i = 0; i < data.getHexagons().size(); i++) {
+                    if (data.getHexagons().get(i).CheckIn(x, y, data.getHexagons().get(i))) {
+                        index = i;
+                        id = data.getHexagons().get(i).getId();
+                    }
+                }
+                if (index != -1) {
+                    selectedShapes.add(new Selector("Hexagon",id, index));
+                    index = -1;
+                    id = null;
+                }
+            }
+            if (data.getPentagons() != null) {
+                for (int i = 0; i < data.getPentagons().size(); i++) {
+                    if (data.getPentagons().get(i).CheckIn(x, y, data.getPentagons().get(i))) {
+                        index = i;
+                        id = data.getPentagons().get(i).getId();
+                    }
+                }
+                if (index != -1) {
+                    selectedShapes.add(new Selector("Pentagon",id, index));
+                    index = -1;
+                    id = null;
+                }
+            }
+            if (data.getHearts() != null) {
+                for (int i = 0; i < data.getHearts().size(); i++) {
+                    if (data.getHearts().get(i).CheckIn(x, y, data.getHearts().get(i))) {
+                        index = i;
+                        id = data.getHearts().get(i).getId();
+                    }
+                }
+                if (index != -1) {
+                    selectedShapes.add(new Selector("Heart",id, index));
+                    index = -1;
+                    id = null;
+                }
+            }
+            if (data.getStars() != null) {
+                for (int i = 0; i < data.getStars().size(); i++) {
+                    if (data.getStars().get(i).CheckIn(x, y, data.getStars().get(i))) {
+                        index = i;
+                        id = data.getStars().get(i).getId();
+                    }
+                }
+                if (index != -1) {
+                    selectedShapes.add(new Selector("Star",id, index));
                     index = -1;
                     id = null;
                 }

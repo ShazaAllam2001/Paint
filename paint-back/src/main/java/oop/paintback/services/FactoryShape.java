@@ -6,6 +6,7 @@ import oop.paintback.model.closedShapes.Ellipse.Ellipse;
 import oop.paintback.model.closedShapes.Heart;
 import oop.paintback.model.closedShapes.Polygons.Heptagon;
 import oop.paintback.model.closedShapes.Polygons.Hexagon;
+import oop.paintback.model.closedShapes.Polygons.Pentagon;
 import oop.paintback.model.closedShapes.Polygons.Rhomboid.Rectangle;
 import oop.paintback.model.closedShapes.Polygons.Rhomboid.Rhomboid;
 import oop.paintback.model.closedShapes.Polygons.Rhomboid.Rhombous;
@@ -29,11 +30,11 @@ public class FactoryShape {
         else if(shapeName.equalsIgnoreCase("Rectangle"))
             return Rectangle.getInstance();
         else if(shapeName.equalsIgnoreCase("Heptagon"))
-            return Rectangle.getInstance();
+            return Heptagon.getInstance();
         else if(shapeName.equalsIgnoreCase("Hexagon"))
             return Hexagon.getInstance();
-        else if(shapeName.equalsIgnoreCase("Heptagon"))
-            return Heptagon.getInstance();
+        else if(shapeName.equalsIgnoreCase("Pentagon"))
+            return Pentagon.getInstance();
         else if(shapeName.equalsIgnoreCase("Circle"))
             return Circle.getInstance();
         else if(shapeName.equalsIgnoreCase("Ellipse"))

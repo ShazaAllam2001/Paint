@@ -1,35 +1,54 @@
 package oop.paintback.model.closedShapes.Ellipse;
 
 import oop.paintback.database.LoadingData;
+import oop.paintback.database.RunningData;
 import oop.paintback.model.closedShapes.closedShape;
+import org.json.JSONObject;
+
 import java.awt.*;
 
 public class Ellipse extends closedShape {
+    protected double centerX,centerY,radiusX,radiusY;
+    private String color,id;
     private static Ellipse instance;
-    protected double radiusX, radiusY;
-
-    public Ellipse() { }
-    public Ellipse(Point center, double radiusX, double radiusY, String outlineColor, String fillColor){
-        this.center = center;
+    public Ellipse(){}
+    public Ellipse(double centerX,double centerY,double radiusX,double radiusY,String color,String id){
+        this.centerX = centerX;
+        this.centerY = centerY;
         this.radiusX = radiusX;
         this.radiusY = radiusY;
-        this.outlineColor = outlineColor;
-        this.fillColor = fillColor;
+        this.color = color;
+        this.id=id;
+    }
+    public double getCenterX() {
+        return centerX;
+    }
+
+    public double getCenterY() {
+        return centerY;
     }
 
     public double getRadiusX() {
         return radiusX;
     }
+
     public double getRadiusY() {
         return radiusY;
     }
 
+    public void setCenterX(double centerX){
+        this.centerX=centerX;
+    }
+    public void setCenterY(double centerY){
+        this.centerY=centerY;
+    }
     public void setRadiusX(double radiusX){
-        this.radiusX = radiusX;
+        this.radiusX=radiusX;
     }
     public void setRadiusY(double radiusY){
-        this.radiusY = radiusY;
+        this.radiusY=radiusY;
     }
+
 
     @Override
     public void copy(double selectedX, double selectedY, double pointX, double pointY, int index, RunningData data) {
@@ -92,20 +111,11 @@ public class Ellipse extends closedShape {
 
     @Override
     public boolean CheckIn(double pointx, double pointy, Object shape) {
-        /*System.out.println(((Ellipse)shape).getCenterX());
-        System.out.println(((Ellipse)shape).getCenterY());
-        System.out.println(((Ellipse)shape).getRadiusX());
-        System.out.println(((Ellipse)shape).getRadiusY());*/
         double checker = (Math.pow(pointx-((Ellipse) shape).getCenterX(), 2) / Math.pow(((Ellipse) shape).getRadiusX() + 1.5, 2))
                 + (Math.pow(pointy-((Ellipse) shape).getCenterY(), 2) / Math.pow(((Ellipse) shape).getRadiusY() + 1.5, 2));
         return !(checker > 1);
     }
-    public String getColor() {
-        return color;
-    }
-    public void setColor(String color) {
-        this.color = color;
-    }
+
     @SuppressWarnings("unchecked")
     @Override
     public org.json.simple.JSONObject dataToString(LoadingData data, int index) {
@@ -115,7 +125,7 @@ public class Ellipse extends closedShape {
         jsonObject.put("centerY",data.getEllipses().get(index).getCenterY());
         jsonObject.put("radiusX",data.getEllipses().get(index).getRadiusX());
         jsonObject.put("radiusY",data.getEllipses().get(index).getRadiusY());
-        jsonObject.put("color",data.getEllipses().get(index).getColor());
+        jsonObject.put("color",data.getEllipses().get(index).getOutlineColor());
         jsonObject.put("id",data.getEllipses().get(index).getId());
         return jsonObject;
     }

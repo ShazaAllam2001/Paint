@@ -11,17 +11,63 @@ export class Shape {
     path: Path2D | null = null;
     lineColor: string = '';
     lineWidth: number = 1.5;
+    fillColor: string = '';
+    center: Point | null = null;
+    points: Point[] | null = null;
     constructor(name: string) {
         this.name = name;
     }
     draw(ctx: CanvasRenderingContext2D) {}
+    clone() { return new Shape("shape");}
 }
 export class ClosedShape extends Shape {
-    fillColor: string = '';
-    center: Point | null = null;
+    constructor(name: string, path: Path2D | null, lineColor: string, lineWidth: number, fillColor: string, center: Point | null) {
+        super(name);
+        this.path = path;
+        this.lineColor = lineColor;
+        this.lineWidth = lineWidth;
+        this.fillColor = fillColor;
+        this.center = center;
+    }
+    override clone() {
+        return new ClosedShape(this.name, this.path, this.lineColor, this.lineWidth, this.fillColor, this.center);
+    }  
 }
 export class Polygon extends ClosedShape {
-    points: Point[] | null = null;
+    constructor(name: string, path: Path2D | null, lineColor: string, lineWidth: number, fillColor: string, center: Point | null, points: Point[]| null) {
+        super(name, path, lineColor, lineWidth, fillColor, center);
+        this.points = points;
+    }
+    override draw(ctx: CanvasRenderingContext2D) {
+        ctx.globalCompositeOperation = 'source-over';
+        // save context current styling
+        let lineColor = ctx.strokeStyle;
+        let lineWidth = ctx.lineWidth;
+        let fillColor = ctx.fillStyle;
+        // change context styling to shape styling
+        ctx.strokeStyle = this.lineColor;
+        ctx.lineWidth = this.lineWidth;
+        ctx.fillStyle = this.fillColor;
+        // create path and save it for being used later
+        let path = new Path2D();
+        if(this.points) {
+            for(let i=0 ; i<this.points.length; i++){
+                path.lineTo(this.points[i].x, this.points[i].y);
+            }
+        }
+        path.closePath();
+        this.path = path;
+        ctx.stroke(path);
+        ctx.fill(path);
+        ctx.beginPath();
+        // change it back to the previous state 
+        ctx.strokeStyle = lineColor;
+        ctx.lineWidth = lineWidth;
+        ctx.fillStyle = fillColor;
+    }
+    override clone() {
+        return new Polygon(this.name, this.path, this.lineColor, this.lineWidth, this.fillColor, this.center, this.points);
+    }
 }
 
 /* Shapes Available */
@@ -62,6 +108,9 @@ export class Text extends Shape {
         ctx.strokeStyle = lineColor;
         ctx.lineWidth = lineWidth;
     }
+    override clone() {
+        return new Text(this.name, this.text, this.bottomLeft, this.maxWidth, this.font, this.lineColor, this.lineWidth);
+    }
 }
 export class LineSegment extends Shape {
     point1: Point;
@@ -93,14 +142,13 @@ export class LineSegment extends Shape {
         ctx.strokeStyle = lineColor;
         ctx.lineWidth = lineWidth;
     }
+    override clone() {
+        return new LineSegment(this.name, this.point1, this.point2, this.lineColor, this.lineWidth);
+    }
 }
 export class Triangle extends Polygon {
     constructor(name: string, points: Point[], lineColor: string, lineWidth: number, fillColor: string) {
-        super(name);
-        this.points = points;
-        this.lineColor = lineColor;
-        this.lineWidth = lineWidth;
-        this.fillColor = fillColor;
+        super(name, null, lineColor, lineWidth, fillColor, null, points);
     }
     override draw(ctx: CanvasRenderingContext2D) {
         ctx.globalCompositeOperation = 'source-over';
@@ -132,47 +180,12 @@ export class Triangle extends Polygon {
 }
 export class Polygonal extends Polygon {
     constructor(name:string, points: Point[], lineColor: string, lineWidth: number, fillColor: string) {
-        super(name);
-        this.points = points;
-        this.lineColor = lineColor;
-        this.lineWidth = lineWidth;
-        this.fillColor = fillColor;
-    }
-    override draw(ctx: CanvasRenderingContext2D) {
-        ctx.globalCompositeOperation = 'source-over';
-        // save context current styling
-        let lineColor = ctx.strokeStyle;
-        let lineWidth = ctx.lineWidth;
-        let fillColor = ctx.fillStyle;
-        // change context styling to shape styling
-        ctx.strokeStyle = this.lineColor;
-        ctx.lineWidth = this.lineWidth;
-        ctx.fillStyle = this.fillColor;
-        // create path and save it for being used later
-        let path = new Path2D();
-        if(this.points) {
-            for(let i=0 ; i<this.points.length; i++){
-                path.lineTo(this.points[i].x, this.points[i].y);
-            }
-        }
-        path.closePath();
-        this.path = path;
-        ctx.stroke(path);
-        ctx.fill(path);
-        ctx.beginPath();
-        // change it back to the previous state 
-        ctx.strokeStyle = lineColor;
-        ctx.lineWidth = lineWidth;
-        ctx.fillStyle = fillColor;
+        super(name, null, lineColor, lineWidth, fillColor, null, points);
     }
 }
 export class Rhomboid extends Polygon {
     constructor(name: string, points: Point[], lineColor: string, lineWidth: number, fillColor: string) {
-        super(name);
-        this.points = points;
-        this.lineColor = lineColor;
-        this.lineWidth = lineWidth;
-        this.fillColor = fillColor;
+        super(name, null, lineColor, lineWidth, fillColor, null, points);
     }
     override draw(ctx: CanvasRenderingContext2D) {
         ctx.globalCompositeOperation = 'source-over';
@@ -245,13 +258,9 @@ export class Ellipse extends ClosedShape {
     radiusX: number;
     radiusY: number;
     constructor(name: string, center: Point, radiusX: number, radiusY: number, lineColor: string, lineWidth: number, fillColor: string) {
-        super(name);
-        this.center = center;
+        super(name, null, lineColor, lineWidth, fillColor, center);
         this.radiusX = radiusX;
         this.radiusY = radiusY;
-        this.lineColor = lineColor;
-        this.lineWidth = lineWidth;
-        this.fillColor = fillColor;
     }
     override draw(ctx: CanvasRenderingContext2D) {
         ctx.globalCompositeOperation = 'source-over';
@@ -282,12 +291,8 @@ export class Ellipse extends ClosedShape {
 export class Circle extends ClosedShape {
     radius: number;
     constructor(name: string, center: Point, radius: number, lineColor: string, lineWidth: number, fillColor: string) {
-        super(name);
-        this.center = center;
+        super(name, null, lineColor, lineWidth, fillColor, center);
         this.radius = radius;
-        this.lineColor = lineColor;
-        this.lineWidth = lineWidth;
-        this.fillColor = fillColor;
     }
     override draw(ctx: CanvasRenderingContext2D) {
         ctx.globalCompositeOperation = 'source-over';
@@ -318,12 +323,8 @@ export class Circle extends ClosedShape {
 export class Star extends ClosedShape {
     outerRadius: number;
     constructor(name: string, center: Point, outerRadius: number, lineColor: string, lineWidth: number, fillColor: string) {
-        super(name);
-        this.center = center;
+        super(name, null, lineColor, lineWidth, fillColor, center);
         this.outerRadius = outerRadius;
-        this.lineColor = lineColor;
-        this.lineWidth = lineWidth;
-        this.fillColor = fillColor;
     }
     override draw(ctx: CanvasRenderingContext2D) {
         ctx.globalCompositeOperation = 'source-over';
@@ -371,13 +372,9 @@ export class Heart extends ClosedShape {
     width: number;
     height: number;
     constructor(name: string, center: Point, width: number, height: number, lineColor: string, lineWidth: number, fillColor: string) {
-        super(name);
-        this.center = center;
+        super(name, null, lineColor, lineWidth, fillColor, center);
         this.width = width;
         this.height = height;
-        this.lineColor = lineColor;
-        this.lineWidth = lineWidth;
-        this.fillColor = fillColor;
     }
     override draw(ctx: CanvasRenderingContext2D) {
         ctx.globalCompositeOperation = 'source-over';
