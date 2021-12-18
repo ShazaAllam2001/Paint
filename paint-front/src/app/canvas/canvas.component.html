@@ -5,6 +5,9 @@
     </div>
 
     <div *ngIf="contextmenu">
-        <app-context-menu [x]="contextmenuX" [y]="contextmenuY"></app-context-menu>
+        <app-context-menu [x]="contextmenuX" [y]="contextmenuY" 
+                          [data]="data" [context]="this.draw_cnv?.getContext('2d')"
+                          (select)="assignSelect($event)"
+        ></app-context-menu>
     </div>
 </div>

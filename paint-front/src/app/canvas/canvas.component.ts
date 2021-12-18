@@ -17,6 +17,7 @@ export class CanvasComponent implements OnInit {
   contextmenuX = 0;
   contextmenuY = 0;
   s: string = '';
+  select: { Type: string, Shape: shapes.Shape | null } = { Type: '', Shape: null }; // select type, selected shape index in data array
   dash: number[] = [0, 5, 10, 15];
   data!: shapes.Shape[]; 
   dataRedo!: shapes.Shape[]; 
@@ -56,16 +57,15 @@ export class CanvasComponent implements OnInit {
   set undoChange(undoChange: Event) {
     var ctx = this.draw_cnv?.getContext("2d");
     if(undoChange && ctx) {
-      console.log(undoChange);
       var undoState = this.undoStack.pop();
       if(undoState) {
         this.redoStack.push(undoState);
         ctx.putImageData(this.undoStack[this.undoStack.length-1],0,0);
       }
+      var lastShape = this.data?.pop(); 
+      if(lastShape)
+        this.dataRedo.push(lastShape);
     }
-    let lastShape = this.data.pop(); //
-    if(lastShape)
-      this.dataRedo.push(lastShape);
   }
   @Input()
   set redoChange(redoChange: Event) {
@@ -76,10 +76,10 @@ export class CanvasComponent implements OnInit {
         this.undoStack.push(redoState);
         ctx.putImageData(redoState,0,0);
       }
+      var lastShape = this.dataRedo?.pop(); 
+      if(lastShape)
+        this.data.push(lastShape);
     }
-    let lastShape = this.dataRedo.pop(); //
-    if(lastShape)
-      this.data.push(lastShape);
   }
   /* Styling Box */
   @Input()
@@ -265,8 +265,7 @@ export class CanvasComponent implements OnInit {
   @Input()
   set changeCanvasEvent(changeCanvas: number) {
     if(changeCanvas) {
-      let parent = this.draw_cnv.parentElement;
-      parent?.replaceChild(this.draw_cnv_list[changeCanvas], this.draw_cnv);
+      this.draw_cnv?.parentElement?.replaceChild(this.draw_cnv_list[changeCanvas], this.draw_cnv);
       this.draw_cnv = this.draw_cnv_list[changeCanvas];
     }
   }  
@@ -285,8 +284,9 @@ export class CanvasComponent implements OnInit {
       ctx.font = "25px Arial";
       this.undoStack = [ctx.getImageData(0,0,this.draw_cnv.width,this.draw_cnv.height)];
     }
-    this.data = [];
     this.redoStack = [];
+    this.data = [];
+    this.dataRedo = [];
     this.gridShown = true;
     this.drawGrid();
     this.draw();
@@ -303,7 +303,75 @@ export class CanvasComponent implements OnInit {
   disableContextMenu(){
     this.contextmenu= false;
   }
-  
+  assignSelect(select: any) {
+    this.select = { Type: select.Type, Shape: select.Shape };
+    this.checkSelect(this.select.Type,this.contextmenuX,this.contextmenuY);
+  }
+  checkSelect(s:string, x1:any, y1:any) {
+    var ctx = this.draw_cnv.getContext("2d");
+    
+    const Copy = (x1:any, y1:any) => {
+      if(this.select.Shape && ctx) {
+        ctx.clearRect(0, 0, this.draw_cnv.width, this.draw_cnv.height);
+        var shape = this.select.Shape;
+       
+        //shape.fillColor = String(ctx.strokeStyle);
+
+        this.data.push(shape);
+        // draw canvas
+        for(let i=0; i<this.data.length; i++) 
+          this.data[i].draw(ctx);//
+      }
+      
+    }
+    const Delete = () => {
+      if(this.select.Shape && ctx) {
+        this.data = this.data.filter((item) => {
+          return item !== this.select.Shape;
+        });
+        ctx.clearRect(0, 0, this.draw_cnv.width, this.draw_cnv.height);
+        // draw canvas
+        for(let i=0; i<this.data.length; i++) 
+          this.data[i].draw(ctx);//
+      }
+    }
+    const LineColor = () => {
+      if(this.select.Shape && ctx) {
+        this.data = this.data.filter((item) => {
+          return item !== this.select.Shape;
+        });
+        ctx.clearRect(0, 0, this.draw_cnv.width, this.draw_cnv.height);
+        this.select.Shape.lineColor = String(ctx.strokeStyle);
+        this.data.push(this.select.Shape);
+        // draw canvas
+        for(let i=0; i<this.data.length; i++) 
+          this.data[i].draw(ctx);//
+      }
+    }
+    const FillColor = () => {
+      if(this.select.Shape && ctx) {
+        this.data = this.data.filter((item) => {
+          return item !== this.select.Shape;
+        });
+        ctx.clearRect(0, 0, this.draw_cnv.width, this.draw_cnv.height);
+        var shape = this.select.Shape as shapes.ClosedShape;
+        shape.fillColor = String(ctx.strokeStyle);
+        this.data.push(shape);
+        // draw canvas
+        for(let i=0; i<this.data.length; i++) 
+          this.data[i].draw(ctx);//
+      }
+    }
+
+    switch(s){
+      case 'Copy': Copy(x1,y1); break; 
+      case 'Delete':  Delete(); break;
+      case 'Line color': LineColor(); break;
+      case 'Fill color': FillColor(); break;  
+    }
+  }
+
+
 
   drawGrid() {
     var ctx;
@@ -447,8 +515,8 @@ export class CanvasComponent implements OnInit {
     var line_width: number | null = this.line_width;
     cnv = this.draw_cnv;
     ctx = cnv.getContext("2d");
-    Data = ctx.getImageData(0, 0, cnv.width, cnv.height);
-   
+    Data = ctx.getImageData(0, 0, cnv.width, cnv.height);  
+
     cnv.addEventListener('mousedown', e => {
       cnv = this.draw_cnv;
       ctx = cnv.getContext("2d");
@@ -457,16 +525,14 @@ export class CanvasComponent implements OnInit {
       y = e.offsetY;
       this.isDrawing = true;
       if(this.s==='Erase') {
-        old = {x: e.offsetX, y: e.offsetY};
-      } else if(this.s==='Select') {
-
+        old = { x: e.offsetX, y: e.offsetY };
       } else if(this.s==='Pan') {
         var cit = transformPoint(e.pageX, e.pageY);
         dragStart = {
           x: cit.x - cnv.offsetLeft,
           y: cit.y - cnv.offsetTop
-        }
-      }
+        };
+      } 
     });   
    
     cnv.addEventListener('mousemove', e => {
@@ -474,15 +540,15 @@ export class CanvasComponent implements OnInit {
       ctx = cnv.getContext("2d");
       if (this.isDrawing === true) {
         if(this.s===''||this.s==='Pencil') {
-          drawLine(x, y, e.offsetX, e.offsetY);
+          this.Line(ctx, x, y, e.offsetX, e.offsetY);
           x = e.offsetX;
           y = e.offsetY;
         } else if(this.s==='Erase') {
           x = e.offsetX;
           y = e.offsetY;
           Erase(x, y);
-        } else if(this.s==='Select') {
-
+        } else if(this.s==='Select' && this.select.Type!=='' && this.select.Shape!==null) {
+          checkSelectMove(this.select.Type, x, y, e.offsetX, e.offsetY);
         } else if(this.s==='Pan') {
           var cit = transformPoint(e.pageX, e.pageY);
           dragEnd = {
@@ -492,7 +558,8 @@ export class CanvasComponent implements OnInit {
           Pan(dragStart, dragEnd);
           dragStart = dragEnd;
         } else {
-          check(this.s, x, y, e.offsetX, e.offsetY);
+          if(x!==e.offsetX && y!==e.offsetY)
+            checkDraw(this.s, x, y, e.offsetX, e.offsetY);
         }
       }
     });
@@ -503,12 +570,13 @@ export class CanvasComponent implements OnInit {
       var shape: shapes.Shape | null = null;
       if (this.isDrawing === true) {
         if(this.s===''||this.s==='Pencil'){
-          drawLine(x, y, e.offsetX, e.offsetY);
+          this.Line(ctx, x, y, e.offsetX, e.offsetY);
         } else if(this.s==='Erase'||this.s==='Pan') {
-        } else if(this.s==='Select') {
-
+        } else if(this.s==='Select' && this.select.Type!=='' && this.select.Shape!==null) {
+          checkSelectMove(this.select.Type, x, y, e.offsetX, e.offsetY);
         } else {
-          shape = check(this.s, x, y, e.offsetX, e.offsetY);
+          if(x!==e.offsetX && y!==e.offsetY)
+            shape = checkDraw(this.s, x, y, e.offsetX, e.offsetY);
         }
         x = 0;
         y = 0;
@@ -519,25 +587,50 @@ export class CanvasComponent implements OnInit {
       }     
     });
 
-    const check =  (s:string, x1:any, y1:any, x2:any, y2:any) => {
+    const checkSelectMove =  (s:string, x1:any, y1:any, x2:any, y2:any) => {
       if (this.isDrawing) {
         ctx.putImageData(Data, 0, 0);
       }
-      switch(s){
-        case 'Text': return addText(x1,y1,x2,y2);
-        case 'Line': return Line(x1,y1,x2,y2); 
-        case 'Tri': return Triangle(x1,y1,x2,y2);
-        case 'Rhomboid': return Rhomboid(x1,y1,x2,y2); 
-        case 'Rect': return Rectangle(x1,y1,x2,y2);
-        case 'Trape': return Trapezoid(x1,y1,x2,y2);
-        case 'Rhombus': return polygonal(x1,y1,x2,y2,4);
-        case 'Pent': return polygonal(x1,y1,x2,y2,5);
-        case 'Hex': return polygonal(x1,y1,x2,y2,6); 
-        case 'Hept': return polygonal(x1,y1,x2,y2,7);  
-        case 'Circ': return Circle(x1,y1,x2,y2);   
-        case 'Elli': return Ellipse(x1,y1,x2,y2);  
-        case 'Star': return Star(x1,y1,x2,y2);  
-        case 'Heart': return Heart(x1,y1,x2,y2);    
+      if(s==='Move')
+        return Move(x1,y1,x2,y2);
+      else if(s==='Resize')
+        return Resize(x1,y1,x2,y2);
+      return null;
+    }
+    
+    const Move = (x1:any, y1:any, x2:any, y2:any) => {
+      let moveDistance = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+      if(this.select.Shape) {
+        if(this.select.Shape instanceof shapes.Circle) {
+           console.log("circle");
+        }
+
+      }
+    }
+    const Resize = (x1:any, y1:any, x2:any, y2:any) => {
+
+    }
+  
+
+    const checkDraw =  (shape:string, x1:any, y1:any, x2:any, y2:any) => {
+      if (this.isDrawing) {
+        ctx.putImageData(Data, 0, 0);
+      }
+      switch(shape){
+        case 'Text': return this.addText(ctx,x1,y1,x2,y2);
+        case 'Line': return this.Line(ctx,x1,y1,x2,y2); 
+        case 'Tri': return this.Triangle(ctx,x1,y1,x2,y2);
+        case 'Rhomboid': return this.Rhomboid(ctx,x1,y1,x2,y2); 
+        case 'Rect': return this.Rectangle(ctx,x1,y1,x2,y2);
+        case 'Trape': return this.Trapezoid(ctx,x1,y1,x2,y2);
+        case 'Rhombus': return this.polygonal(ctx,x1,y1,x2,y2,4);
+        case 'Pent': return this.polygonal(ctx,x1,y1,x2,y2,5);
+        case 'Hex': return this.polygonal(ctx,x1,y1,x2,y2,6); 
+        case 'Hept': return this.polygonal(ctx,x1,y1,x2,y2,7);  
+        case 'Circ': return this.Circle(ctx,x1,y1,x2,y2);   
+        case 'Elli': return this.Ellipse(ctx,x1,y1,x2,y2);  
+        case 'Star': return this.Star(ctx,x1,y1,x2,y2);  
+        case 'Heart': return this.Heart(ctx,x1,y1,x2,y2);    
       }
       return null;
     }
@@ -589,157 +682,148 @@ export class CanvasComponent implements OnInit {
       ctx.lineWidth = line_width;
       old = {x: x, y: y};
     }
-
-    function drawLine(x1:any, y1:any, x2:any, y2:any) {
-      ctx.globalCompositeOperation = 'source-over';
-      ctx.beginPath();
-      ctx.moveTo(x1, y1);
-      ctx.lineTo(x2, y2);
-      ctx.stroke();
-      ctx.closePath();
-      ctx.beginPath();
-    }
-
-    function addText(x1:any, y1:any, x2:any, y2:any) {
-      let maxWidth = Math.abs(x1 - x2);
-      var text = new shapes.Text("Text",
-                                 new shapes.Point(x1,y1),
-                                 maxWidth,
-                                 ctx.font,
-                                 ctx.strokeStyle,
-                                 ctx.lineWidth);
-      text.draw(ctx);
-      return text;
-    }
-
-    function Line(x1:any, y1:any, x2:any, y2:any) {
-      var line = new shapes.LineSegment(new shapes.Point(x1,y1),
-                                        new shapes.Point(x2,y2),
-                                        ctx.strokeStyle,
-                                        ctx.lineWidth);
-      line.draw(ctx);
-      return line;
-    }
-   
-    function Triangle(x1:any, y1:any, x2:any, y2:any) {
-      let first = Math.abs (x2 - x1) * 2;
-      var points = [new shapes.Point(x1,y1),
-                    new shapes.Point(x2-first,y2),
-                    new shapes.Point(x2,y2)];
-      var triangle = new shapes.Triangle(points,
-                                         ctx.strokeStyle,
-                                         ctx.lineWidth,
-                                         ctx.fillStyle);
-      triangle.draw(ctx);
-      return triangle;
-    }
-   
-    function polygonal(x1:any, y1:any, x2:any, y2:any, n:any) {
-      let r = Math.abs(x1 - x2);
-      let angle = (2*Math.PI)/n;
-      var points: any = [];
-      for(let i=0 ; i<n; i++){
-        const a = i * angle;
-        points.push(new shapes.Point(x1 + r * Math.cos(a), y1 + r * Math.sin(a)));
-      }
-      var polygonal = new shapes.Polygonal(points,
-                                        ctx.strokeStyle,
-                                        ctx.lineWidth,
-                                        ctx.fillStyle);
-      polygonal.draw(ctx);
-      return polygonal;
-    }
-   
-    function Rhomboid (x1:any, y1:any, x2:any, y2:any) {
-      let w = Math.abs(x1 - x2);
-      let h = Math.abs(y1 - y2);
-      var points = [new shapes.Point(x1,y1),
-                    new shapes.Point(x1 + w,y1),
-                    new shapes.Point(x1 + w + h*Math.cos(45),y1+h),
-                    new shapes.Point(x1 + h*Math.cos(45),y1+h)];
-      var rhomboid = new shapes.Rhomboid(points,
-                                        ctx.strokeStyle,
-                                        ctx.lineWidth,
-                                        ctx.fillStyle);
-      rhomboid.draw(ctx);
-      return rhomboid;
-    }
-
-    function Rectangle(x1:any, y1:any, x2:any, y2:any) {
-      let h = Math.abs(y1 - y2);
-      var points = [new shapes.Point(x1,y1),
-                    new shapes.Point(x2,y2),
-                    new shapes.Point(x2,y2+h),
-                    new shapes.Point(x1,y+h)];
-      var rectangle = new shapes.Rectangle(points,
-                                           ctx.strokeStyle,
-                                           ctx.lineWidth,
-                                           ctx.fillStyle);
-      rectangle.draw(ctx);
-      return rectangle;
-    }
-
-    function Trapezoid(x1:any, y1:any, x2:any, y2:any) {
-      let h = Math.abs(y1 - y2);
-      var points = [new shapes.Point(x1,y1),
-                    new shapes.Point(x2,y1),
-                    new shapes.Point(x2 + h/Math.tan(45),y2),
-                    new shapes.Point(x1 - h/Math.tan(45),y2)];
-      var trapezoid = new shapes.Trapezoid(points,
-                                           ctx.strokeStyle,
-                                           ctx.lineWidth,
-                                           ctx.fillStyle);
-      trapezoid.draw(ctx);
-      return trapezoid;
-    }
-   
-    function Circle(x1:any ,y1:any, x2:any, y2:any) {
-      let r = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
-      var circle = new shapes.Circle(new shapes.Point(x1,y1),
-                                         r,
-                                         ctx.stokeStyle,
-                                         ctx.lineWidth,
-                                         ctx.fillStyle);
-      circle.draw(ctx);
-      return circle;
-    }
-   
-    function Ellipse(x1:any, y1:any, x2:any, y2:any) { 
-      let r1 = Math.abs(x1 - x2);
-      let r2 = Math.abs(y1 - y2);
-      var ellipse = new shapes.Ellipse(new shapes.Point(x1,y1),
-                                       r1,
-                                       r2,
-                                       ctx.strokeStyle,
-                                       ctx.lineWidth,
-                                       ctx.fillStyle);
-      ellipse.draw(ctx);
-      return ellipse;
-    }
-
-    function Star(x1:any, y1:any, x2:any, y2:any) {
-      var outerRadius = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
-      var star = new shapes.Star(new shapes.Point(x1,y1),
-                                 outerRadius,
-                                 ctx.strokeStyle,
-                                 ctx.lineWidth,
-                                 ctx.fillStyle); 
-      star.draw(ctx);
-      return star;
-    }
-
-    function Heart(x1:any, y1:any, x2:any, y2:any) {
-      var width = Math.abs(x1 - x2);
-      var height = Math.abs(y1 - y2);
-      var heart = new shapes.Heart(new shapes.Point(x1,y1),
-                                   width,
-                                   height,
-                                   ctx.strokeStyle,
-                                   ctx.lineWidth,
-                                   ctx.fillStyle); 
-      heart.draw(ctx);
-      return heart;
-    }
   } 
+
+  addText(ctx: CanvasRenderingContext2D, x1:any, y1:any, x2:any, y2:any) {
+    let maxWidth = Math.abs(x1 - x2);
+    var text = new shapes.Text("Text",
+                               "Text",
+                               new shapes.Point(x1,y1),
+                               maxWidth,
+                               ctx.font,
+                               String(ctx.strokeStyle),
+                               ctx.lineWidth);
+    text.draw(ctx);
+    return text;
+  }
+  Line(ctx: CanvasRenderingContext2D, x1:any, y1:any, x2:any, y2:any) {
+    var line = new shapes.LineSegment("Line",
+                                      new shapes.Point(x1,y1),
+                                      new shapes.Point(x2,y2),
+                                      String(ctx.strokeStyle),
+                                      ctx.lineWidth);
+    line.draw(ctx);
+    return line;
+  }
+  Triangle(ctx: CanvasRenderingContext2D, x1:any, y1:any, x2:any, y2:any) {
+    let first = Math.abs (x2 - x1) * 2;
+    var points = [new shapes.Point(x1,y1),
+                  new shapes.Point(x2-first,y2),
+                  new shapes.Point(x2,y2)];
+    var triangle = new shapes.Triangle("Triangle",
+                                       points,
+                                       String(ctx.strokeStyle),
+                                       ctx.lineWidth,
+                                       String(ctx.fillStyle));
+    triangle.draw(ctx);
+    return triangle;
+  }
+  polygonal(ctx: CanvasRenderingContext2D, x1:any, y1:any, x2:any, y2:any, n:any) {
+    let r = Math.abs(x1 - x2);
+    let angle = (2*Math.PI)/n;
+    var points: any = [];
+    for(let i=0 ; i<n; i++){
+      const a = i * angle;
+      points.push(new shapes.Point(x1 + r * Math.cos(a), y1 + r * Math.sin(a)));
+    }
+    var polygonal = new shapes.Polygonal("Polygonal",
+                                         points,
+                                         String(ctx.strokeStyle),
+                                         ctx.lineWidth,
+                                         String(ctx.fillStyle));
+    polygonal.draw(ctx);
+    return polygonal;
+  }
+  Rhomboid (ctx: CanvasRenderingContext2D, x1:any, y1:any, x2:any, y2:any) {
+    let w = Math.abs(x1 - x2);
+    let h = Math.abs(y1 - y2);
+    var points = [new shapes.Point(x1,y1),
+                  new shapes.Point(x1 + w,y1),
+                  new shapes.Point(x1 + w + h*Math.cos(45),y1+h),
+                  new shapes.Point(x1 + h*Math.cos(45),y1+h)];
+    var rhomboid = new shapes.Rhomboid("Rhomboid",
+                                       points,
+                                       String(ctx.strokeStyle),
+                                       ctx.lineWidth,
+                                       String(ctx.fillStyle));
+    rhomboid.draw(ctx);
+    return rhomboid;
+  }
+  Rectangle(ctx: CanvasRenderingContext2D, x1:any, y1:any, x2:any, y2:any) {
+    let h = Math.abs(y1 - y2);
+    var points = [new shapes.Point(x1,y1),
+                  new shapes.Point(x2,y2),
+                  new shapes.Point(x2,y2+h),
+                  new shapes.Point(x1,y2+h)];
+    var rectangle = new shapes.Rectangle("Rectangle",
+                                         points,
+                                         String(ctx.strokeStyle),
+                                         ctx.lineWidth,
+                                         String(ctx.fillStyle));
+    rectangle.draw(ctx);
+    return rectangle;
+  }
+  Trapezoid(ctx: CanvasRenderingContext2D, x1:any, y1:any, x2:any, y2:any) {
+    let h = Math.abs(y1 - y2);
+    var points = [new shapes.Point(x1,y1),
+                  new shapes.Point(x2,y1),
+                  new shapes.Point(x2 + h/Math.tan(45),y2),
+                  new shapes.Point(x1 - h/Math.tan(45),y2)];
+    var trapezoid = new shapes.Trapezoid("Trapezoid",
+                                         points,
+                                         String(ctx.strokeStyle),
+                                         ctx.lineWidth,
+                                         String(ctx.fillStyle));
+    trapezoid.draw(ctx);
+    return trapezoid;
+  }
+  Circle(ctx: CanvasRenderingContext2D, x1:any ,y1:any, x2:any, y2:any) {
+    let r = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+    var circle = new shapes.Circle("Circle",
+                                    new shapes.Point(x1,y1),
+                                    r,
+                                    String(ctx.strokeStyle),
+                                    ctx.lineWidth,
+                                    String(ctx.fillStyle));
+    circle.draw(ctx);
+    return circle;
+  }
+  Ellipse(ctx: CanvasRenderingContext2D, x1:any, y1:any, x2:any, y2:any) { 
+    let r1 = Math.abs(x1 - x2);
+    let r2 = Math.abs(y1 - y2);
+    var ellipse = new shapes.Ellipse("Ellipse",
+                                     new shapes.Point(x1,y1),
+                                     r1,
+                                     r2,
+                                     String(ctx.strokeStyle),
+                                     ctx.lineWidth,
+                                     String(ctx.fillStyle));
+    ellipse.draw(ctx);
+    return ellipse;
+  }
+  Star(ctx: CanvasRenderingContext2D, x1:any, y1:any, x2:any, y2:any) {
+    var outerRadius = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+    var star = new shapes.Star("Star",
+                               new shapes.Point(x1,y1),
+                               outerRadius,
+                               String(ctx.strokeStyle),
+                               ctx.lineWidth,
+                               String(ctx.fillStyle)); 
+    star.draw(ctx);
+    return star;
+  }
+  Heart(ctx: CanvasRenderingContext2D, x1:any, y1:any, x2:any, y2:any) {
+    var width = Math.abs(x1 - x2);
+    var height = Math.abs(y1 - y2);
+    var heart = new shapes.Heart("Heart",
+                                 new shapes.Point(x1,y1),
+                                 width,
+                                 height,
+                                 String(ctx.strokeStyle),
+                                 ctx.lineWidth,
+                                 String(ctx.fillStyle)); 
+    heart.draw(ctx);
+    return heart;
+  }
 
 }

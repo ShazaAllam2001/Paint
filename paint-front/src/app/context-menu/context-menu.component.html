@@ -1,25 +1,27 @@
 <div id="context-menu" [ngStyle]="{'left.px': x, 'top.px': y}">
-    <div class="item" style="border-top-right-radius: 10px; border-top-left-radius: 10px;">
+    <div class="item" (click)="selectType('Move')"
+         style="border-top-right-radius: 10px; border-top-left-radius: 10px;">
         <img src="../assets/tools/icons8-move-48.png" width="24" height="24"/>
         Move
     </div>
-    <div class="item">
+    <div class="item" (click)="selectType('Copy')">
         <img src="../assets/tools/icons8-copy-48.png" width="24" height="24"/>
         Copy
     </div>
-    <div class="item">
+    <div class="item" (click)="selectType('Resize')">
         <img src="../assets/tools/icons8-resize-48.png" width="24" height="24"/>
         Resize
     </div>
-    <div class="item">
+    <div class="item" (click)="selectType('Delete')">
         <img src="../assets/tools/icons8-delete-48.png" width="24" height="24"/>
         Delete
     </div>
-    <div class="item">
+    <div class="item" (click)="selectType('Line color')">
         <img src="../assets/tools/icons8-marker-pen-48.png" width="24" height="24"/>
         Line color
     </div>
-    <div class="item" style="border-bottom-right-radius: 10px; border-bottom-left-radius: 10px;">
+    <div class="item" (click)="selectType('Fill color')"
+         style="border-bottom-right-radius: 10px; border-bottom-left-radius: 10px;">
         <img src="../assets/tools/icons8-fill-drip-48.png" width="24" height="24"/>
         Fill color
     </div>

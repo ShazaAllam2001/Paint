@@ -7,9 +7,13 @@ export class Point {
     }
 }
 export class Shape {
+    name: string = '';
     path: Path2D | null = null;
     lineColor: string = '';
     lineWidth: number = 1.5;
+    constructor(name: string) {
+        this.name = name;
+    }
     draw(ctx: CanvasRenderingContext2D) {}
 }
 export class ClosedShape extends Shape {
@@ -26,8 +30,8 @@ export class Text extends Shape {
     font: string;
     bottomLeft: Point;
     maxWidth: number;
-    constructor(text: string, bottomLeft: Point, maxWidth: number, font: string, lineColor: string, lineWidth: number) {
-        super();
+    constructor(name: string, text: string, bottomLeft: Point, maxWidth: number, font: string, lineColor: string, lineWidth: number) {
+        super(name);
         this.text = text;
         this.bottomLeft = bottomLeft;
         this.maxWidth = maxWidth;
@@ -62,8 +66,8 @@ export class Text extends Shape {
 export class LineSegment extends Shape {
     point1: Point;
     point2: Point;
-    constructor(point1: Point, point2: Point, lineColor: string, lineWidth: number) {
-        super();
+    constructor(name: string, point1: Point, point2: Point, lineColor: string, lineWidth: number) {
+        super(name);
         this.point1 = point1;
         this.point2 = point2;
         this.lineColor = lineColor;
@@ -71,16 +75,28 @@ export class LineSegment extends Shape {
     }
     override draw(ctx: CanvasRenderingContext2D) {
         ctx.globalCompositeOperation = 'source-over';
-        ctx.moveTo(this.point1.x, this.point1.y);
-        ctx.lineTo(this.point2.x, this.point2.y);
-        ctx.closePath();
-        ctx.stroke();
+        // save context current styling
+        let lineColor = ctx.strokeStyle;
+        let lineWidth = ctx.lineWidth;
+        // change context styling to shape styling
+        ctx.strokeStyle = this.lineColor;
+        ctx.lineWidth = this.lineWidth;
+        // create path and save it for being used later
+        let path = new Path2D();
+        path.moveTo(this.point1.x, this.point1.y);
+        path.lineTo(this.point2.x, this.point2.y);
+        path.closePath();
+        this.path = path;
+        ctx.stroke(path);
         ctx.beginPath();
+        // change it back to the previous state 
+        ctx.strokeStyle = lineColor;
+        ctx.lineWidth = lineWidth;
     }
 }
 export class Triangle extends Polygon {
-    constructor(points: Point[], lineColor: string, lineWidth: number, fillColor: string) {
-        super();
+    constructor(name: string, points: Point[], lineColor: string, lineWidth: number, fillColor: string) {
+        super(name);
         this.points = points;
         this.lineColor = lineColor;
         this.lineWidth = lineWidth;
@@ -115,8 +131,8 @@ export class Triangle extends Polygon {
     }
 }
 export class Polygonal extends Polygon {
-    constructor(points: Point[], lineColor: string, lineWidth: number, fillColor: string) {
-        super();
+    constructor(name:string, points: Point[], lineColor: string, lineWidth: number, fillColor: string) {
+        super(name);
         this.points = points;
         this.lineColor = lineColor;
         this.lineWidth = lineWidth;
@@ -151,8 +167,8 @@ export class Polygonal extends Polygon {
     }
 }
 export class Rhomboid extends Polygon {
-    constructor(points: Point[], lineColor: string, lineWidth: number, fillColor: string) {
-        super();
+    constructor(name: string, points: Point[], lineColor: string, lineWidth: number, fillColor: string) {
+        super(name);
         this.points = points;
         this.lineColor = lineColor;
         this.lineWidth = lineWidth;
@@ -189,8 +205,8 @@ export class Rhomboid extends Polygon {
     }
 }
 export class Rectangle extends Rhomboid {
-    constructor(points: Point[], outlineColor: string, lineWidth: number, fillColor: string) {
-        super(points, outlineColor, lineWidth, fillColor);
+    constructor(name:string, points: Point[], outlineColor: string, lineWidth: number, fillColor: string) {
+        super(name, points, outlineColor, lineWidth, fillColor);
     }
     override draw(ctx: CanvasRenderingContext2D) {
         ctx.globalCompositeOperation = 'source-over';
@@ -221,15 +237,15 @@ export class Rectangle extends Rhomboid {
     }
 }
 export class Trapezoid extends Rhomboid {
-    constructor(points: Point[], outlineColor: string, lineWidth: number, fillColor: string) {
-        super(points, outlineColor, lineWidth, fillColor);
+    constructor(name:string, points: Point[], outlineColor: string, lineWidth: number, fillColor: string) {
+        super(name, points, outlineColor, lineWidth, fillColor);
     }
 }
 export class Ellipse extends ClosedShape {
     radiusX: number;
     radiusY: number;
-    constructor(center: Point, radiusX: number, radiusY: number, lineColor: string, lineWidth: number, fillColor: string) {
-        super();
+    constructor(name: string, center: Point, radiusX: number, radiusY: number, lineColor: string, lineWidth: number, fillColor: string) {
+        super(name);
         this.center = center;
         this.radiusX = radiusX;
         this.radiusY = radiusY;
@@ -265,8 +281,8 @@ export class Ellipse extends ClosedShape {
 }
 export class Circle extends ClosedShape {
     radius: number;
-    constructor(center: Point, radius: number, lineColor: string, lineWidth: number, fillColor: string) {
-        super();
+    constructor(name: string, center: Point, radius: number, lineColor: string, lineWidth: number, fillColor: string) {
+        super(name);
         this.center = center;
         this.radius = radius;
         this.lineColor = lineColor;
@@ -301,8 +317,8 @@ export class Circle extends ClosedShape {
 }
 export class Star extends ClosedShape {
     outerRadius: number;
-    constructor(center: Point, outerRadius: number, lineColor: string, lineWidth: number, fillColor: string) {
-        super();
+    constructor(name: string, center: Point, outerRadius: number, lineColor: string, lineWidth: number, fillColor: string) {
+        super(name);
         this.center = center;
         this.outerRadius = outerRadius;
         this.lineColor = lineColor;
@@ -354,8 +370,8 @@ export class Star extends ClosedShape {
 export class Heart extends ClosedShape {
     width: number;
     height: number;
-    constructor(center: Point, width: number, height: number, lineColor: string, lineWidth: number, fillColor: string) {
-        super();
+    constructor(name: string, center: Point, width: number, height: number, lineColor: string, lineWidth: number, fillColor: string) {
+        super(name);
         this.center = center;
         this.width = width;
         this.height = height;
