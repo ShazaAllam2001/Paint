@@ -1,23 +1,53 @@
 <div id="style-box">
     <div class="element">
-        <button class="zoom-btn">-</button>
+        <button class="zoom-btn" (click)="zoomOut($event)">-</button>
         <div>
             <label class="right-element">Zoom</label>
             <label class="zoom-ratio">100%</label>
         </div>
-        <button class="zoom-btn right-element">+</button>
+        <button class="zoom-btn right-element" (click)="zoomIn($event)">+</button>
     </div> 
+    <div class="element">
+        <button id="bold" class="tool-btn" (click)="bold()">
+            <img src="../assets/tools/icons8-bold-48.png" width="24" height="24"/>
+        </button>
+        <button id="capitalize" class="tool-btn" (click)="capitalize()">
+            <img src="../assets/tools/icons8-uppercase-48.png" width="24" height="24"/>
+        </button>
+        <button id="italic" class="tool-btn" (click)="italic()">
+            <img src="../assets/tools/icons8-italic-48.png" width="24" height="24"/>
+        </button>
+    </div> 
+    <div class="element">
+        <label for="font" class="symbol text">
+            <img src="../assets/tools/icons8-choose-font-48.png" width="24" height="24"/>
+        </label>
+        <select name="fonts" id="font" (change)="changeFont()">
+            <option value="Arial">Arial</option>
+            <option value="Garamond">Garamond </option>
+            <option value="Georgia">Georgia</option>
+            <option value="Courier New">Courier New</option>
+            <option value="Verdana">Verdana</option>
+            <option value="Helvetica">Helvetica</option>
+        </select>
+    </div>
+    <div class="element">
+        <label for="font-size" class="symbol text"> 
+            <img src="../assets/tools/icons8-font-size-48.png" width="24" height="24"/> 
+        </label>
+        <input type="number" id="font-size" class="number" title="Font size" value="25" (change)="changeFont()">
+    </div>
     <div class="element">
         <label for="stroke-width" class="symbol">
             <img src="../assets/tools/icons8-ball-point-pen-48.png" width="24" height="24"/>
         </label>
-        <input type="number" id="stroke-width" class="number" title="Stroke width">
+        <input type="number" id="stroke-width" class="number" title="Stroke width" value="1.5" (change)="changeWidth()">
     </div>
     <div class="element">
         <label for="stroke-style" class="symbol">
             <img src="../assets/tools/icons8-pencil-drawing-48.png" width="24" height="24"/>
         </label>
-        <select name="styles" id="stroke-style">
+        <select name="styles" id="stroke-style" (change)="changeDash()">
             <option value="solid">Solid</option>
             <option value="dashed-1">Dashed-1</option>
             <option value="dashed-2">Dashed-2</option>
@@ -28,37 +58,21 @@
         <label for="stroke-color" class="symbol">
             <img src="../assets/tools/icons8-marker-pen-48.png" width="24" height="24"/>
         </label>
-        <input type="color" id="stroke-color" title="Stroke color" (click)="SetColor($event)" value="">
+        <input type="color" id="stroke-color" title="Stroke color" (change)="changeColor()">
     </div>
     <div class="element">
         <label for="fill-color" class="symbol">
             <img src="../assets/tools/icons8-fill-drip-48.png" width="24" height="24"/>
         </label>
-        <input type="color" id="fill-color" title="Fill color">
+        <input type="color" id="fill-color" title="Fill color" (change)="changeColorFill()">
+        <input type="checkbox" id="fill" name="activate-fill" (change)="changeColorFill()">
     </div>
     <div class="element">
         <label>Custom Shapes</label>
     </div>
     <div class="shape-grid">
-        <button class="tool-btn custom">
-            <img src="../assets/customShapes/icons8-star-32.png" width="32" height="32"/>
-        </button>
-        <button class="tool-btn custom">
-            <img src="../assets/customShapes/icons8-heart-32.png" width="32" height="32"/>
-        </button>
-        <button class="tool-btn custom">
-            <img src="../assets/customShapes/flaticon-closed-curve.png" width="32" height="32"/>
-        </button>
-
-        <button class="tool-btn custom">
-            <img src="../assets/customShapes/flaticon-drop.png" width="32" height="32"/>
-        </button>
-        <button class="tool-btn custom">
-            <img src="../assets/customShapes/icons8-clubs-32.png" width="32" height="32"/>
-        </button> 
-        <button class="tool-btn custom">
-            <img src="../assets/customShapes/icons8-diamond-32.png" width="32" height="32"/>
-        </button>
+        <button class="tool-btn custom"></button>
+    </div>
 
         <button class="tool-btn custom">
             <img src="../assets/customShapes/flaticon-intersection-64.png" width="32" height="32"/>

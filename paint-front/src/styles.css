@@ -19,3 +19,22 @@
 .tool-btn:active {
     background-color: var(--hovered);
 }
+.tab-btn {
+    width: 70px;
+    height: 28px;
+    margin-left: 5px;
+    background-color: var(--unhovered);
+    font-family: var(--font);
+    font-size: 18px;
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+    border: none;
+    text-overflow: ellipsis;
+    cursor: pointer;
+}
+.tab-btn:hover {
+    background-color: var(--hovered);
+}
+.tab-btn:active {
+    background-color: var(--hovered);
+}

@@ -7,20 +7,74 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'paint-front';
+  
+  sizeChange!: Event;
+  gridChange!: boolean;
+  deleteChange!: Event;
+  undoChange!: Event;
+  redoChange!: Event;
+
+  selectEvent!: Event;
+  panningEvent!: Event;
+  pencilEvent!: Event;
+  eraseEvent!: Event;
+  textEvent!: Event;
   lineEvent!: Event;
   triEvent!: Event;
   rhomboidEvent!: Event;
   rectEvent!: Event;
-  rhombusEvent!:Event;
-  trapeEvent!:Event;
-  pentEvent!:Event;
-  hexEvent!:Event;
-  heptEvent!:Event;
-  circEvent!:Event;
-  elliEvent!:Event;
-  colorEvent!:Event;
-  pencilEvent!:Event;
+  rhombusEvent!: Event;
+  trapezoidEvent!: Event;
+  pentEvent!: Event;
+  hexEvent!: Event;
+  heptEvent!: Event;
+  circEvent!: Event;
+  elliEvent!: Event;
+  starEvent!: Event;
+  heartEvent!: Event;
 
+  zoomInChange!: Event;
+  zoomOutChange!: Event;
+  fontChange!: string;
+  widthChange!: string;
+  dashChange!: string;
+  colorChange!: string;
+  colorFillChange!: { fillCheck: boolean, fillColor: string };
+
+  createCanvas!: Event;
+  changeCanvas!: number;
+
+  onChangeSize(size: Event) {
+    this.sizeChange = size;
+  }
+  onChangeGrid(grid: any) {
+    this.gridChange = grid;
+  }
+  onChangeDelete(deleteEvent: Event) {
+    this.deleteChange = deleteEvent;
+  }
+  onChangeUndo(undoEvent: Event) {
+    this.undoChange = undoEvent;
+  }
+  onChangeRedo(redoEvent: Event) {
+    this.redoChange = redoEvent;
+  }
+
+  onChangeSelect(event: Event) {
+    this.selectEvent = event;
+  }
+  onChangePan(event: Event) {
+    this.panningEvent = event;
+  }
+  onChangePencil(event: Event) {
+    this.pencilEvent = event;
+  }
+  onChangeErase(event: Event) {
+    this.eraseEvent = event;
+  }
+  onChangeText(event: Event) {
+    this.textEvent = event;
+  }
   onChangeLine(event: Event) {
     this.lineEvent = event;
   }
@@ -36,9 +90,8 @@ export class AppComponent {
   onChangeRhombus(event: Event) {
     this.rhombusEvent = event;
   }
- 
-  onChangeTrape(event: Event) {
-    this.trapeEvent = event;
+  onChangeTrapezoid(event: Event) {
+    this.trapezoidEvent = event;
   }
   onChangePent(event: Event) {
     this.pentEvent = event;
@@ -55,11 +108,39 @@ export class AppComponent {
   onChangeElli(event: Event) {
     this.elliEvent = event;
   }
-  onChangeColor(event: Event) {
-    this.colorEvent = event;
+  onChangeStar(event: Event) {
+    this.starEvent = event;
   }
-  onChangePencil(event: Event) {
-    this.pencilEvent = event;
+  onChangeHeart(event: Event) {
+    this.heartEvent = event;
   }
-  
+
+  onChangeZoomIn(event: Event) {
+    this.zoomInChange = event;
+  }
+  onChangeZoomOut(event: Event) {
+    this.zoomOutChange = event;
+  }
+  onChangeFont(font: any) {
+    this.fontChange = font;
+  }
+  onChangeWidth(width: any) {
+    this.widthChange = width;
+  }
+  onChangeDash(dash: any) {
+    this.dashChange = dash;
+  }
+  onChangeColor(color: any) {
+    this.colorChange = color;
+  }
+  onChangeColorFill(fillChange: any) {
+    this.colorFillChange = fillChange;
+  }
+
+  onCreateCanvas(event: Event) {
+    this.createCanvas = event;
+  }
+  onChangeCanvas(change: number) {
+    this.changeCanvas = change;
+  }
 }

@@ -1,72 +1,71 @@
 <div id="menu-bar">
-   <div>
-       <div>
-           <label id="logo">Draw & Paint</label>
-           <input type="text" id="file-name" class="item">
-           <a href="" class="item">See file status</a> 
-       </div>
-       <div>
-           <div class="dropdown">
-               <button class="menu-btn">File</button>
-               <div class="dropdown-content"> 
-                  <div class="menu button">     
-                      <button type="button" value="new">New</button>
-                      <button type="button" value="open">Open</button>
-                      <button type="button" value="save">Save</button>
-                      <button type="button" value="close">Close</button>
-                  </div>
-               </div>    
-           </div>
-
-           <div class="dropdown">
-               <button class="menu-btn">Edit</button>
-               <div class="dropdown-content">
+    <div>
+        <div>
+            <label id="logo">Draw & Paint</label>
+            <input type="text" id="file-name" class="item" value="Unnamed_Document">
+            <a href="" class="item">See file status</a> 
+        </div>
+        <div>
+            <div class="dropdown">
+                <button class="menu-btn">File</button>
+                <div class="dropdown-content"> 
                    <div class="menu button">     
-                       <button type="button" value="copy">Copy</button>
-                       <button type="button" value="paste">Paste</button>
-                   </div>      
-               </div>
-           </div>
-           
-           <div class="dropdown">
-               <button class="menu-btn">Insert</button>
-               <div class="dropdown-content">   
-                  <div class="menu button">     
-                      <button type="button" value="photo">photo</button>
-                      <button type="button" value="table">table</button>
-                  </div>
-               </div>
-           </div>
-                 
-           <div class="dropdown">
-              <button class="menu-btn">View</button>
-              <div class="dropdown-content"> 
-                   <div class="menu button">     
-                       <button type="button" value="zoom">zoom</button> 
+                       <button type="button" value="new">New</button>
+                       <button type="button" value="open">Open</button>
+                       <button type="button" value="save">Save</button>
+                       <button type="button" value="close">Close</button>
                    </div>
-              </div>
-           </div>
-                  
-           <button class="menu-btn" type="button" value="help">Help</button> 
-       </div>
-   </div>
-   
+                </div>    
+            </div>
 
-   <div>
-       <button class="tool-btn" title="Grid">
-           <img src="../assets/tools/icons8-grid-48.png" width="24px" height="24px">
-       </button>
-       <button class="tool-btn" title="Select">
-           <img src="../assets/tools/icons8-select-48.png" width="24px" height="24px">
-       </button>
-       <button class="tool-btn" title="Delete">
-           <img src="../assets/tools/icons8-delete-48.png" width="24px" height="24px">
-       </button>
-       <button class="tool-btn" title="Undo">
-           <img src="../assets/tools/icons8-undo-48.png" width="24px" height="24px">
-       </button>
-       <button class="tool-btn" title="Redo">
-           <img src="../assets/tools/icons8-redo-48.png" width="24px" height="24px">  
-       </button> 
-   </div>  
+            <div class="dropdown">
+                <button class="menu-btn">Edit</button>
+                <div class="dropdown-content">
+                    <div class="menu button">     
+                        <button type="button" value="copy">Copy</button>
+                        <button type="button" value="paste">Paste</button>
+                    </div>      
+                </div>
+            </div>
+            
+            <div class="dropdown">
+                <button class="menu-btn">Insert</button>
+                <div class="dropdown-content">   
+                   <div class="menu button">     
+                       <button type="button" value="photo">photo</button>
+                       <button type="button" value="table">table</button>
+                   </div>
+                </div>
+            </div>
+                  
+            <div class="dropdown">
+               <button class="menu-btn">View</button>
+               <div class="dropdown-content"> 
+                    <div class="menu button">     
+                        <button type="button" value="zoom">zoom</button> 
+                    </div>
+               </div>
+            </div>
+                   
+            <button class="menu-btn" type="button" value="help">Help</button> 
+        </div>
+    </div>
+
+    <div>
+        <button class="tool-btn" title="Resize" (click)="resize($event)">
+            <img src="../assets/tools/icons8-resize-48.png" width="24" height="24"/>
+        </button>
+        <button class="tool-btn" title="Grid" (click)="grid()">
+            <img src="../assets/tools/icons8-grid-48.png" width="24" height="24"/>
+        </button>
+        <button class="tool-btn" title="Delete" (click)="delete($event)">
+            <img src="../assets/tools/icons8-delete-48.png" width="24" height="24"/>
+        </button>
+        <button class="tool-btn" title="Undo" (click)="undo($event)">
+            <img src="../assets/tools/icons8-undo-48.png" width="24" height="24"/>
+        </button>
+        <button class="tool-btn" title="Redo" (click)="redo($event)">
+            <img src="../assets/tools/icons8-redo-48.png" width="24" height="24"/>  
+        </button> 
+    </div>  
 </div>

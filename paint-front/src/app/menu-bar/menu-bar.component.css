@@ -13,10 +13,11 @@
     font-size: 25px;
 }
 #file-name{
-    width: 350px;
+    width: 280px;
     height: 25px;
     font-size: 15px;
     margin-bottom: 3px;
+    padding-left: 6px;
 }
 a {
     font-family: var(--font);

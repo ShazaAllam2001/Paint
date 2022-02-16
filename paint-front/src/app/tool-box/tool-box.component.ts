@@ -6,31 +6,50 @@ import { Component, EventEmitter, OnInit, Output } from '@angular/core';
   styleUrls: ['./tool-box.component.css']
 })
 export class ToolBoxComponent implements OnInit {
- 
+
+  @Output() selectAction = new EventEmitter<Event>();
+  @Output() panningAction = new EventEmitter<Event>();
+  @Output() pencilDraw = new EventEmitter<Event>();
+  @Output() eraseAction = new EventEmitter<Event>();
+  @Output() textDraw = new EventEmitter<Event>();
+
   @Output() lineDraw = new EventEmitter<Event>();
-  @Output() polyDraw = new EventEmitter<Event>();
   @Output() triDraw = new EventEmitter<Event>();
   @Output() rhomboidDraw = new EventEmitter<Event>();
   @Output() rectDraw = new EventEmitter<Event>();
-  @Output() RhombusDraw = new EventEmitter<Event>();
-  @Output() TrapeDraw = new EventEmitter<Event>();
-  @Output() PentDraw = new EventEmitter<Event>();
-  @Output() HexDraw = new EventEmitter<Event>();
-  @Output() HeptDraw = new EventEmitter<Event>();
-  @Output() CircDraw = new EventEmitter<Event>();
-  @Output() ElliDraw = new EventEmitter<Event>();
-  @Output() PenDraw = new EventEmitter<Event>();
+  @Output() rhombusDraw = new EventEmitter<Event>();
+  @Output() trapezoidDraw = new EventEmitter<Event>();
+  @Output() pentDraw = new EventEmitter<Event>();
+  @Output() hexDraw = new EventEmitter<Event>();
+  @Output() heptDraw = new EventEmitter<Event>();
+  @Output() circDraw = new EventEmitter<Event>();
+  @Output() elliDraw = new EventEmitter<Event>();
+  @Output() starDraw = new EventEmitter<Event>();
+  @Output() heartDraw = new EventEmitter<Event>();
 
   constructor() { }
 
   ngOnInit(): void {
   }
 
+  select(event: Event) {
+    this.selectAction.emit(event);
+  }
+  panning(event: Event) {
+    this.panningAction.emit(event);
+  }
+  pencil(event: Event) {
+    this.pencilDraw.emit(event);
+  }
+  erase(event: Event) {
+    this.eraseAction.emit(event);
+  }
+  addText(event: Event) {
+    this.textDraw.emit(event);
+  }
+
   drawLine(event: Event) {
     this.lineDraw.emit(event);
-  }
-  drawPoly(event: Event) {
-    this.polyDraw.emit(event);
   }
   drawTriangle(event: Event) {
     this.triDraw.emit(event);
@@ -42,29 +61,31 @@ export class ToolBoxComponent implements OnInit {
     this.rectDraw.emit(event);
   }
   drawRhombus(event: Event) {
-    this.RhombusDraw.emit(event);
+    this.rhombusDraw.emit(event);
   }
-
-  drawTrape(event: Event) {
-    this.TrapeDraw.emit(event);
+  drawTrapezoid(event: Event) {
+    this.trapezoidDraw.emit(event);
   }
   drawPent(event: Event) {
-    this.PentDraw.emit(event);
+    this.pentDraw.emit(event);
   }
   drawHex(event: Event) {
-    this.HexDraw.emit(event);
+    this.hexDraw.emit(event);
   }
   drawHept(event: Event) {
-    this.HeptDraw.emit(event);
+    this.heptDraw.emit(event);
   }
   drawCirc(event: Event) {
-    this.CircDraw.emit(event);
+    this.circDraw.emit(event);
   }
   drawElli(event: Event) {
-    this.ElliDraw.emit(event);
+    this.elliDraw.emit(event);
   }
-  withPencil(event: Event) {
-    this.PenDraw.emit(event);
+  drawStar(event: Event) {
+    this.starDraw.emit(event);
+  }
+  drawHeart(event: Event) {
+    this.heartDraw.emit(event);
   }
 
 }

@@ -8,7 +8,7 @@ import { CanvasComponent } from './canvas/canvas.component';
 import { ToolBoxComponent } from './tool-box/tool-box.component';
 import { NavBarComponent } from './nav-bar/nav-bar.component';
 import { StyleBoxComponent } from './style-box/style-box.component';
-import{HttpClient, HttpClientModule} from '@angular/common/http';
+import { ContextMenuComponent } from './context-menu/context-menu.component';
 
 @NgModule({
   declarations: [
@@ -17,7 +17,8 @@ import{HttpClient, HttpClientModule} from '@angular/common/http';
     CanvasComponent,
     ToolBoxComponent,
     NavBarComponent,
-    StyleBoxComponent
+    StyleBoxComponent,
+    ContextMenuComponent
   ],
   imports: [
     BrowserModule,

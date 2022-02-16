@@ -1,39 +1,80 @@
 <div id="app">
-  <app-menu-bar></app-menu-bar>
+  <app-menu-bar (gridShow)="onChangeGrid($event)"
+                (resizeEvent)="onChangeSize($event)"
+                (deleteEvent)="onChangeDelete($event)"
+                (undoEvent)="onChangeUndo($event)"
+                (redoEvent)="onChangeRedo($event)"
+  ></app-menu-bar>
 
   <div class="content">
-    <app-tool-box (lineDraw)="onChangeLine($event)"
+    <app-tool-box (selectAction)="onChangeSelect($event)"
+                  (panningAction)="onChangePan($event)"
+                  (pencilDraw)="onChangePencil($event)"
+                  (eraseAction)="onChangeErase($event)"
+                  (textDraw)="onChangeText($event)"
+                  (lineDraw)="onChangeLine($event)"
                   (triDraw)="onChangeTri($event)"
                   (rhomboidDraw)="onChangeRhomboid($event)"
                   (rectDraw)="onChangeRect($event)"
-                  (RhombusDraw)="onChangeRhombus($event)"
-                  (TrapeDraw)="onChangeTrape($event)"
-                  (PentDraw)="onChangePent($event)"
-                  (HexDraw)="onChangeHex($event)"
-                  (HeptDraw)="onChangeHept($event)"
-                  (CircDraw)="onChangeCirc($event)"
-                  (ElliDraw)="onChangeElli($event)"
-                  (Color)="onChangeColor($event)"
-                  (PenDraw)="onChangePencil($event)"
-                 ></app-tool-box>
+                  (rhombusDraw)="onChangeRhombus($event)"
+                  (trapezoidDraw)="onChangeTrapezoid($event)"
+                  (pentDraw)="onChangePent($event)"
+                  (hexDraw)="onChangeHex($event)"
+                  (heptDraw)="onChangeHept($event)"
+                  (circDraw)="onChangeCirc($event)"
+                  (elliDraw)="onChangeElli($event)"
+                  (starDraw)="onChangeStar($event)"
+                  (heartDraw)="onChangeHeart($event)"
+    ></app-tool-box>
     <div>
-      <app-canvas [lineEvent]="lineEvent"
+      <app-canvas [gridChange]="gridChange"
+                  [sizeChange]="sizeChange"
+                  [deleteChange]="deleteChange"
+                  [undoChange]="undoChange"
+                  [redoChange]="redoChange"
+                  
+                  [selectEvent]="selectEvent"
+                  [panningEvent]="panningEvent"
+                  [pencilEvent]="pencilEvent"
+                  [eraseEvent]="eraseEvent"
+                  [textEvent]="textEvent"
+                  [lineEvent]="lineEvent"
                   [triEvent]="triEvent"
                   [rhomboidEvent]="rhomboidEvent"
                   [rectEvent]="rectEvent"
-                  [RhombusEvent]="rhombusEvent"
-                  [TrapeEvent]="trapeEvent"
-                  [PentEvent]="pentEvent"
-                  [HexEvent]="hexEvent"
-                  [HeptEvent]="heptEvent"
-                  [CircEvent]="circEvent"
-                  [ElliEvent]="elliEvent"
-                  [ColorEvent]="colorEvent"
-                  [PencilEvent]="pencilEvent"
+                  [rhombusEvent]="rhombusEvent"
+                  [trapezoidEvent]="trapezoidEvent"
+                  [pentEvent]="pentEvent"
+                  [hexEvent]="hexEvent"
+                  [heptEvent]="heptEvent"
+                  [circEvent]="circEvent"
+                  [elliEvent]="elliEvent"
+                  [starEvent]="starEvent"
+                  [heartEvent]="heartEvent"
+                  
+                  [zoomInChange]="zoomInChange"
+                  [zoomOutChange]="zoomOutChange"
+                  [fontChange]="fontChange"
+                  [widthChange]="widthChange"
+                  [dashChange]="dashChange"
+                  [colorChange]="colorChange"
+                  [colorFillChange]="colorFillChange" 
+                  
+                  [createCanvasEvent]="createCanvas"
+                  [changeCanvasEvent]="changeCanvas"
       ></app-canvas>
-      <app-nav-bar></app-nav-bar>
+      <app-nav-bar (createAction)="onCreateCanvas($event)"
+                   (changeAction)="onChangeCanvas($event)"
+      ></app-nav-bar>
     </div>
-    <app-style-box></app-style-box>
+    <app-style-box (zoomInChange)="onChangeZoomIn($event)"
+                   (zoomOutChange)="onChangeZoomOut($event)"
+                   (fontChange)="onChangeFont($event)"
+                   (widthChange)="onChangeWidth($event)"
+                   (dashChange)="onChangeDash($event)"
+                   (colorChange)="onChangeColor($event)"
+                   (colorFillChange)="onChangeColorFill($event)"
+    ></app-style-box>
   </div>
 
 </div>

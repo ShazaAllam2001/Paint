@@ -1,0 +1,24 @@
+#context-menu {
+    font-family: var(--font);
+    position: absolute;
+    z-index: 100000;
+    width: 125px;
+    background: #808080;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.5);
+}
+#context-menu .item {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 6px 10px;
+    font-size: 16px;
+    color: #eee;
+}
+#context-menu .item:hover {
+    background: #A9A9A9;
+}
+#context-menu .item img {
+    display: inline-block;
+    margin-right: 8px;
+}
