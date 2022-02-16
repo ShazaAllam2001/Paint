@@ -1,5 +1,4 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { HttpClient, HttpResponse } from '@angular/common/http';
 import * as shapes from './shapes';
 import * as drawing from './drawingShapes';
 import * as canvas from './canvasEdit';
@@ -279,7 +278,7 @@ export class CanvasComponent implements OnInit {
     }
   }  
 
-  constructor(private http: HttpClient) { }
+  constructor() { }
 
   ngOnInit(): void {
     this.draw_cnv_list = Array.from(document.getElementsByTagName("canvas"));
@@ -469,7 +468,7 @@ export class CanvasComponent implements OnInit {
       ctx = cnv.getContext("2d");
       if (this.isDrawing === true) {
         if(this.s===''||this.s==='Pencil') {
-          drawing.draw.Line(this.http, ctx, x, y, e.offsetX, e.offsetY);
+          drawing.draw.Line(ctx, x, y, e.offsetX, e.offsetY);
           x = e.offsetX;
           y = e.offsetY;
         } else if(this.s==='Erase') {
@@ -499,7 +498,7 @@ export class CanvasComponent implements OnInit {
       var shape: shapes.Shape | null = null;
       if (this.isDrawing === true) {
         if(this.s===''||this.s==='Pencil'){
-          drawing.draw.Line(this.http, ctx, x, y, e.offsetX, e.offsetY);
+          drawing.draw.Line(ctx, x, y, e.offsetX, e.offsetY);
         } else if(this.s==='Erase'||this.s==='Pan') {
         } else if(this.s==='Select' && this.select.Type!=='' && this.select.Shape!==null) {
           checkSelectMove(this.select.Type, x, y, e.offsetX, e.offsetY);
@@ -572,46 +571,46 @@ export class CanvasComponent implements OnInit {
         ctx.putImageData(Data, 0, 0);
       }
       switch(s){
-        case 'Text': var text = drawing.draw.addText(this.http,ctx,x1,y1,x2,y2);
+        case 'Text': var text = drawing.draw.addText(ctx,x1,y1,x2,y2);
                      this.text.push(text);
         return text;
-        case 'Line': var line = drawing.draw.Line(this.http,ctx,x1,y1,x2,y2);
+        case 'Line': var line = drawing.draw.Line(ctx,x1,y1,x2,y2);
                      this.line.push(line);
         return line; 
-        case 'Tri': var triangle = drawing.draw.Triangle(this.http,ctx,x1,y1,x2,y2);
+        case 'Tri': var triangle = drawing.draw.Triangle(ctx,x1,y1,x2,y2);
                     this.polygon.push(triangle);
         return triangle;
-        case 'Rhomboid': var rhomboid = drawing.draw.Rhomboid(this.http,ctx,x1,y1,x2,y2);
+        case 'Rhomboid': var rhomboid = drawing.draw.Rhomboid(ctx,x1,y1,x2,y2);
                          this.polygon.push(rhomboid);
         return rhomboid; 
-        case 'Rect': var rectangle = drawing.draw.Rectangle(this.http,ctx,x1,y1,x2,y2);
+        case 'Rect': var rectangle = drawing.draw.Rectangle(ctx,x1,y1,x2,y2);
                      this.polygon.push(rectangle);
         return rectangle; 
-        case 'Trape': var trapezoid = drawing.draw.Trapezoid(this.http,ctx,x1,y1,x2,y2);
+        case 'Trape': var trapezoid = drawing.draw.Trapezoid(ctx,x1,y1,x2,y2);
                       this.polygon.push(trapezoid);
         return trapezoid;
-        case 'Rhombus': var rhombous = drawing.draw.Polygonal(this.http,ctx,x1,y1,x2,y2,4);
+        case 'Rhombus': var rhombous = drawing.draw.Polygonal(ctx,x1,y1,x2,y2,4);
                         this.polygon.push(rhombous);
         return rhombous;
-        case 'Pent': var pentagon = drawing.draw.Polygonal(this.http,ctx,x1,y1,x2,y2,5);
+        case 'Pent': var pentagon = drawing.draw.Polygonal(ctx,x1,y1,x2,y2,5);
                      this.polygon.push(pentagon);
         return pentagon;
-        case 'Hex': var hexagon = drawing.draw.Polygonal(this.http,ctx,x1,y1,x2,y2,6);
+        case 'Hex': var hexagon = drawing.draw.Polygonal(ctx,x1,y1,x2,y2,6);
                     this.polygon.push(hexagon);
         return hexagon; 
-        case 'Hept': var heptagon = drawing.draw.Polygonal(this.http,ctx,x1,y1,x2,y2,7);
+        case 'Hept': var heptagon = drawing.draw.Polygonal(ctx,x1,y1,x2,y2,7);
                      this.polygon.push(heptagon);
         return heptagon; 
-        case 'Circ': var circle = drawing.draw.Circle(this.http,ctx,x1,y1,x2,y2); 
+        case 'Circ': var circle = drawing.draw.Circle(ctx,x1,y1,x2,y2); 
                      this.closedShape.push(circle);
         return circle;   
-        case 'Elli': var ellipse = drawing.draw.Ellipse(this.http,ctx,x1,y1,x2,y2);  
+        case 'Elli': var ellipse = drawing.draw.Ellipse(ctx,x1,y1,x2,y2);  
                      this.closedShape.push(ellipse);
         return ellipse;
-        case 'Star': var star = drawing.draw.Star(this.http,ctx,x1,y1,x2,y2);  
+        case 'Star': var star = drawing.draw.Star(ctx,x1,y1,x2,y2);  
                      this.closedShape.push(star);
         return star;  
-        case 'Heart': var heart = drawing.draw.Heart(this.http,ctx,x1,y1,x2,y2);  
+        case 'Heart': var heart = drawing.draw.Heart(ctx,x1,y1,x2,y2);  
                       this.closedShape.push(heart);
         return heart;   
       }

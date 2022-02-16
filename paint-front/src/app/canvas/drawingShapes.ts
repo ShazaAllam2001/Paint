@@ -3,7 +3,7 @@ import * as shapes from './shapes';
 
 export class draw {
     
-    static addText(http: HttpClient, ctx: CanvasRenderingContext2D, x1:any, y1:any, x2:any, y2:any) {
+    static addText(ctx: CanvasRenderingContext2D, x1:any, y1:any, x2:any, y2:any) {
         let maxWidth = Math.abs(x1 - x2);
         var text = new shapes.Text("Text",
                                    "Text",
@@ -13,22 +13,10 @@ export class draw {
                                    String(ctx.strokeStyle),
                                    ctx.lineWidth);
         text.draw(ctx);
-        /*http.post('http://localhost:8080/operations/squareRoot',{
-             responseType: 'json',
-             params:{
-             sh: text,
-             },
-             observe: 'response'
-           }).subscribe(response=>{
-      result = response.body?.toString();
-      if(result)
-        this.current = result;
-        this.previous = this.current;
-    });*/
         return text;
     }
 
-    static Line(http: HttpClient, ctx: CanvasRenderingContext2D, x1:any, y1:any, x2:any, y2:any) {
+    static Line(ctx: CanvasRenderingContext2D, x1:any, y1:any, x2:any, y2:any) {
         var line = new shapes.LineSegment("Line",
                                           new shapes.Point(x1,y1),
                                           new shapes.Point(x2,y2),
@@ -38,7 +26,7 @@ export class draw {
         return line;
     }
 
-    static Triangle(http: HttpClient, ctx: CanvasRenderingContext2D, x1:any, y1:any, x2:any, y2:any) {
+    static Triangle(ctx: CanvasRenderingContext2D, x1:any, y1:any, x2:any, y2:any) {
         let first = Math.abs (x2 - x1) * 2;
         var points = [new shapes.Point(x1,y1),
                       new shapes.Point(x2-first,y2),
@@ -52,7 +40,7 @@ export class draw {
         return triangle;
     }
 
-    static Polygonal(http: HttpClient, ctx: CanvasRenderingContext2D, x1:any, y1:any, x2:any, y2:any, n:any) {
+    static Polygonal(ctx: CanvasRenderingContext2D, x1:any, y1:any, x2:any, y2:any, n:any) {
         let r = Math.abs(x1 - x2);
         let angle = (2*Math.PI)/n;
         var points: any = [];
@@ -69,7 +57,7 @@ export class draw {
         return polygonal;
     }
 
-    static Rhomboid(http: HttpClient, ctx: CanvasRenderingContext2D, x1:any, y1:any, x2:any, y2:any) {
+    static Rhomboid( ctx: CanvasRenderingContext2D, x1:any, y1:any, x2:any, y2:any) {
         let w = Math.abs(x1 - x2);
         let h = Math.abs(y1 - y2);
         var points = [new shapes.Point(x1,y1),
@@ -85,7 +73,7 @@ export class draw {
         return rhomboid;
     }
 
-    static Rectangle(http: HttpClient, ctx: CanvasRenderingContext2D, x1:any, y1:any, x2:any, y2:any) {
+    static Rectangle(ctx: CanvasRenderingContext2D, x1:any, y1:any, x2:any, y2:any) {
         let h = Math.abs(y1 - y2);
         var points = [new shapes.Point(x1,y1),
                       new shapes.Point(x2,y2),
@@ -100,7 +88,7 @@ export class draw {
         return rectangle;
     }
 
-    static Trapezoid(http: HttpClient, ctx: CanvasRenderingContext2D, x1:any, y1:any, x2:any, y2:any) {
+    static Trapezoid(ctx: CanvasRenderingContext2D, x1:any, y1:any, x2:any, y2:any) {
         let h = Math.abs(y1 - y2);
         var points = [new shapes.Point(x1,y1),
                       new shapes.Point(x2,y1),
@@ -115,7 +103,7 @@ export class draw {
         return trapezoid;
     }
 
-    static Circle(http: HttpClient, ctx: CanvasRenderingContext2D, x1:any ,y1:any, x2:any, y2:any) {
+    static Circle(ctx: CanvasRenderingContext2D, x1:any ,y1:any, x2:any, y2:any) {
         let r = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
         var circle = new shapes.Circle("Circle",
                                         new shapes.Point(x1,y1),
@@ -127,7 +115,7 @@ export class draw {
         return circle;
     }
 
-    static Ellipse(http: HttpClient, ctx: CanvasRenderingContext2D, x1:any, y1:any, x2:any, y2:any) { 
+    static Ellipse(ctx: CanvasRenderingContext2D, x1:any, y1:any, x2:any, y2:any) { 
         let r1 = Math.abs(x1 - x2);
         let r2 = Math.abs(y1 - y2);
         var ellipse = new shapes.Ellipse("Ellipse",
@@ -141,7 +129,7 @@ export class draw {
         return ellipse;
     }
 
-    static Star(http: HttpClient, ctx: CanvasRenderingContext2D, x1:any, y1:any, x2:any, y2:any) {
+    static Star(ctx: CanvasRenderingContext2D, x1:any, y1:any, x2:any, y2:any) {
         var outerRadius = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
         var star = new shapes.Star("Star",
                                    new shapes.Point(x1,y1),
@@ -153,7 +141,7 @@ export class draw {
         return star;
     }
     
-    static Heart(http: HttpClient, ctx: CanvasRenderingContext2D, x1:any, y1:any, x2:any, y2:any) {
+    static Heart(ctx: CanvasRenderingContext2D, x1:any, y1:any, x2:any, y2:any) {
         var width = Math.abs(x1 - x2);
         var height = Math.abs(y1 - y2);
         var heart = new shapes.Heart("Heart",
