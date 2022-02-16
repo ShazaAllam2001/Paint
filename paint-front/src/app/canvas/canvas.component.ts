@@ -429,7 +429,28 @@ export class CanvasComponent implements OnInit {
       case 'Fill color': FillColor(); break;  
     }
   }
+}
+  
+function Line( x1: any,y1: any,x2: any, y2:any){
+     
+   ctx.moveTo(x1, y1);
+   ctx.lineTo(x2, y2);
+   ctx.closePath();
+   ctx.stroke();
+   ctx.strokeStyle = 'black';
+   ctx.beginPath();}
 
+function Triangle(x1: any,y1: any,x2: any, y2:any) {
+   
+  let first =Math.abs (x2 - x1) * 2;
+   ctx.moveTo(x1, y1);
+   ctx.lineTo(x2 - first, y2);
+   ctx.lineTo(x2, y2);
+   ctx.closePath();
+   ctx.stroke();
+   ctx.strokeStyle = 'black';
+   ctx.beginPath();
+}
 
   draw(){
     let Data = ''; 
@@ -665,5 +686,37 @@ export class CanvasComponent implements OnInit {
       old = {x: x, y: y};
     }
   } 
-
 }
+   
+function Rectangle(x1: any,y1: any,x2: any, y2:any) {
+   
+      let w = Math.abs(x1 - x2);
+      let h = Math.abs(y1 - y2);
+      ctx.closePath();
+      ctx.strokeRect(x1, y1, w, h);
+      ctx.strokeStyle = 'black';
+      ctx.beginPath();  
+    }
+
+  function Circle(x1: any,y1: any,x2: any, y2:any) {
+    
+      let r = Math.sqrt((x1 - x2) * (x1 - x2) + (y1 - y2) * (y1 - y2));
+      ctx.arc(x1, y1, r, 0, Math.PI * 2);
+      ctx.closePath();
+      ctx.stroke();
+      ctx.strokeStyle = 'black';
+      ctx.beginPath();
+    }
+  
+  function Ellipse(x1: any,y1: any,x2: any, y2:any) {
+    
+      let r1 = Math.abs(x1 - x2);
+      let r2 = Math.abs(y1 - y2);
+      ctx.ellipse(x1, y1, r1, r2, Math.PI, 0, 2 * Math.PI);
+      ctx.closePath();
+      ctx.stroke();
+      ctx.strokeStyle = 'black';
+      ctx.beginPath();
+    }    
+
+} }
