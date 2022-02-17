@@ -21,11 +21,6 @@ export class StyleBoxComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-  
-  }
- 
-  SetColor(event: Event) {
-    this.Color.emit(event);
   }
   
   zoomIn(event: Event) {

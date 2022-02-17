@@ -22,8 +22,7 @@ import { ContextMenuComponent } from './context-menu/context-menu.component';
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule,
-    HttpClientModule
+    AppRoutingModule
   ],
   providers: [],
   bootstrap: [AppComponent]
